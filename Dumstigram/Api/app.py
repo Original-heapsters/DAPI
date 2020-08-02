@@ -1,8 +1,12 @@
-from flask import Flask, request
+import os
+from flask import Flask, request, redirect, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 app = Flask(__name__)
 app.config.from_pyfile('default.default_settings')
 app.config.from_envvar('DAPI_ENV_OVERRIDE', silent=True)
+
+
+ALLOWED_EXTENSIONS = {'PNG', 'png', 'jpg', 'jpeg'}
 
 
 @app.route('/')
@@ -36,7 +40,7 @@ def upload_file():
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         return redirect(url_for('uploaded_file',
-                                    filename=filename))
+                                filename=filename))
 
 
 @app.route('/uploads/<filename>')
