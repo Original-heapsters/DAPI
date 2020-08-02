@@ -1,0 +1,6 @@
+DEBUG = True
+HOST = '0.0.0.0'
+PORT = '5000'
+DB_HOST = 'sqlite:///persistence/test.db'
+UPLOAD_FOLDER = '/uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
