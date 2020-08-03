@@ -1,12 +1,8 @@
 import cv2
 
-GRAY_MIDPOINT = 127
-BLACK = 255
-
 def filter_image(input, coords=None):
     grayImage = cv2.cvtColor(input, cv2.COLOR_BGR2GRAY)
-    (_, blackAndWhiteImage) = cv2.threshold(grayImage, GRAY_MIDPOINT, BLACK, cv2.THRESH_BINARY)
-    return blackAndWhiteImage
+    return grayImage
 
 def identify_features(input):
     return None
