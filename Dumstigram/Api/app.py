@@ -1,7 +1,7 @@
 import os
 from flask import Flask, request, redirect, url_for, send_file
 from werkzeug.utils import secure_filename
-from Filters import laserEyes
+from .Filters import laserEyes
 app = Flask(__name__)
 app.config.from_pyfile('default.default_settings')
 app.config.from_envvar('DAPI_ENV_OVERRIDE', silent=True)
