@@ -1,9 +1,12 @@
+
 import os
-import tempfile
 import cv2
+import tempfile
 import random
 
-class laserEyes(object):
+
+class laserEyes:
+
     def __init__(self):
         dirname = os.path.dirname(__file__)
         self.resources = os.path.join(dirname, 'resources')
@@ -12,7 +15,7 @@ class laserEyes(object):
         self.identifier = 'haar_eye_tree_glasses.xml'
 
 
-    def filter_image(self, input, coords=None):
+     def filter_image(self, input, coords=None):
         if coords is None:
             return None
 
@@ -36,8 +39,7 @@ class laserEyes(object):
             alpha_bg = 1.0 - alpha_over
 
             for c in range(0, 3):
-                background[y1:y2, x1:x2, c] = (alpha_over * overlay[:, :, c] +
-                                          alpha_bg * background[y1:y2, x1:x2, c])
+                background[y1:y2, x1:x2, c] = (alpha_over * overlay[:, :, c] + alpha_bg * background[y1:y2, x1:x2, c])
             return background
 
         for (x, y, w, h) in coords:
