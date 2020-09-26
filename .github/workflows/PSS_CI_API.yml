@@ -30,6 +30,6 @@ jobs:
         pip install -r ${{ env.PROJECT_NAME }}/Api/requirements.txt
     - name: Lint with flake8
       run: |
-        flake8 ${{ env.PROJECT_NAME }}/Api --count --select=E9,F63,F7,F82 --max-complexity=10 --max-line-length=127 --show-source --statistics
+        flake8 ${{ env.PROJECT_NAME }}/Api --count --show-source --statistics
     - name: Test with pytest
       run: pytest ${{ env.PROJECT_NAME }}/Api

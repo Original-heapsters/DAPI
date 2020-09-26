@@ -1,11 +1,14 @@
 import cv2
 
+
 def filter_image(input, coords=None):
     grayImage = cv2.cvtColor(input, cv2.COLOR_BGR2GRAY)
     return grayImage
 
+
 def identify_features(input):
     return None
+
 
 def apply_filter(input, debug=False):
     original = cv2.imread(input)
