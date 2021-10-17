@@ -1,10 +1,13 @@
 import os
+import io
 from flask import Flask, request, redirect, url_for, send_file
 from werkzeug.utils import secure_filename
-from .Filters import laserEyes
+from Filters import laserEyes
+import redis
 app = Flask(__name__)
 app.config.from_pyfile('default.default_settings')
 app.config.from_envvar('DAPI_ENV_OVERRIDE', silent=True)
+r = redis.Redis(host='localhost', port=6379, db=0)
 
 
 ALLOWED_EXTENSIONS = {'PNG', 'png', 'jpg', 'jpeg'}
@@ -38,13 +41,27 @@ def upload_file():
         return 'No selected file'
 
     if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
+        file_components = file.filename.rsplit('.', 1)
+        name = str(hash(file_components[0]))
+        filename = secure_filename(name + '.' + file_components[-1])
         dest_file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(dest_file)
+        print(dest_file)
 
         # choose random filter and apply it here
         filterClass = laserEyes.laserEyes()
         filtered_image = filterClass.apply_filter(dest_file)
+        print(filtered_image)
+        with open(filtered_image, 'rb') as f:
+            s = f.read()
+            r.setex('test', 1000, s)
+        # print(r.get('test'))
+
+        return send_file(
+            io.BytesIO(r.get('test')),
+            as_attachment=True,
+            attachment_filename=filtered_image
+        )
 
         return redirect(url_for('uploaded_file',
                                 filename=filtered_image))
@@ -56,6 +73,7 @@ def uploaded_file(filename):
 
 
 if __name__ == '__main__':
+    print(app.config['PORT'])
     app.run(debug=app.config['DEBUG'],
             port=app.config['PORT'],
             host=app.config['HOST'])
