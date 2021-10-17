@@ -51,11 +51,9 @@ def upload_file():
         # choose random filter and apply it here
         filterClass = laserEyes.laserEyes()
         filtered_image = filterClass.apply_filter(dest_file)
-        print(filtered_image)
         with open(filtered_image, 'rb') as f:
             s = f.read()
             r.setex('test', 1000, s)
-        # print(r.get('test'))
 
         return send_file(
             io.BytesIO(r.get('test')),
