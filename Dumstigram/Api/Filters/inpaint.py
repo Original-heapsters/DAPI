@@ -22,7 +22,7 @@ class inpaint(object):
 
         for pts in coords:
             cv2.rectangle(mask, pts, 255, -1)
-        output = cv2.inpaint(input, mask, random.uniform(50, 100), flags=random.choice([cv2.INPAINT_TELEA, cv2.INPAINT_NS]))
+        output = cv2.inpaint(input, mask, random.uniform(50, 100), flags=random.choice([cv2.INPAINT_TELEA]))
         return output
 
     def identify_prep(self, input):
