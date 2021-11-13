@@ -6,8 +6,8 @@ from Filters import laserEyes
 import redis
 app = Flask(__name__)
 app.config.from_pyfile('default.default_settings')
-app.config.from_envvar('DAPI_ENV_OVERRIDE', silent=True)
-r = redis.Redis(host='localhost', port=6379, db=0)
+redis_url = os.environ.get('REDIS_URL') or app.config['REDIS_URL']
+r = redis.Redis.from_url(redis_url)
 
 
 ALLOWED_EXTENSIONS = {'PNG', 'png', 'jpg', 'jpeg'}
@@ -53,7 +53,7 @@ def upload_file():
         filtered_image = filterClass.apply_filter(dest_file)
         with open(filtered_image, 'rb') as f:
             s = f.read()
-            r.setex('test', 1000, s)
+            r.setex('test', 30, s)
             app.logger.debug('Saving temp file to redis key test')
             os.remove(dest_file)
 
@@ -73,7 +73,8 @@ def uploaded_file(filename):
 
 
 if __name__ == '__main__':
-    app.logger.info(f'Launching at {app.config["HOST"]}:{app.config["PORT"]}')
+    app_port = os.environ.get('PORT') or app.config['PORT']
+    app.logger.info(f'Launching at {app.config["HOST"]}:{app_port}')
     app.run(debug=app.config['DEBUG'],
-            port=app.config['PORT'],
+            port=app_port,
             host=app.config['HOST'])
