@@ -73,6 +73,7 @@ def upload_file():
 
 
 def clear_dir(folder_path):
+    os.makedirs(folder_path, exist_ok=True)
     if len(os.listdir(folder_path)) > 5:
         for file_object in os.listdir(folder_path):
             file_object_path = os.path.join(folder_path, file_object)
