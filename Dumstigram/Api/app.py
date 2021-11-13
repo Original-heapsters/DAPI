@@ -4,7 +4,7 @@ import random
 import uuid
 from flask import Flask, request, redirect, url_for, send_file, render_template
 from werkzeug.utils import secure_filename
-from Filters import laserEyes, noise, brightnessContrast, bulge, inpaint
+from Filters import laserEyes, noise, brightnessContrast, bulge, inpaint, sharpen
 import redis
 app = Flask(__name__)
 app.config.from_pyfile('default.default_settings')
