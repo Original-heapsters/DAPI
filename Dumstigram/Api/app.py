@@ -72,10 +72,21 @@ def upload_file():
         )
 
 
+def clear_dir(folder_path):
+    if len(os.listdir(folder_path)) > 5:
+        for file_object in os.listdir(folder_path):
+            file_object_path = os.path.join(folder_path, file_object)
+            if os.path.isfile(file_object_path) or os.path.islink(file_object_path):
+                os.unlink(file_object_path)
+            else:
+                shutil.rmtree(file_object_path)
+
+
 @app.route('/home', methods=['POST'])
 def upload_file_testing():
     # Clear out static folder to preserve space
-    shutil.rmtree(app.config['UPLOAD_FOLDER'])
+    clear_dir(app.config['UPLOAD_FOLDER'])
+
     # check if the post request has the file part
     if 'file' not in request.files:
         return 'No file was uploaded'
