@@ -1,8 +1,9 @@
 import os
 import io
+import random
 from flask import Flask, request, redirect, url_for, send_file
 from werkzeug.utils import secure_filename
-from Filters import laserEyes
+from Filters import laserEyes, noise
 import redis
 app = Flask(__name__)
 app.config.from_pyfile('default.default_settings')
@@ -49,7 +50,9 @@ def upload_file():
         app.logger.debug(f'Saving temp file to {dest_file}')
 
         # choose random filter and apply it here
-        filterClass = laserEyes.laserEyes()
+        # filterClass = laserEyes.laserEyes()
+        filter_classes = [laserEyes.laserEyes(), noise.noise()]
+        filterClass = random.choice(filter_classes)
         filtered_image = filterClass.apply_filter(dest_file)
         with open(filtered_image, 'rb') as f:
             s = f.read()
