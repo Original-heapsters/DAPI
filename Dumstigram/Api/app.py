@@ -46,7 +46,7 @@ def upload_file():
         filename = secure_filename(name + '.' + file_components[-1])
         dest_file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(dest_file)
-        print(dest_file)
+        app.logger.debug(f'Saving temp file to {dest_file}')
 
         # choose random filter and apply it here
         filterClass = laserEyes.laserEyes()
@@ -54,6 +54,8 @@ def upload_file():
         with open(filtered_image, 'rb') as f:
             s = f.read()
             r.setex('test', 1000, s)
+            app.logger.debug('Saving temp file to redis key test')
+            os.remove(dest_file)
 
         return send_file(
             io.BytesIO(r.get('test')),
@@ -71,7 +73,7 @@ def uploaded_file(filename):
 
 
 if __name__ == '__main__':
-    print(app.config['PORT'])
+    app.logger.info(f'Launching at {app.config["HOST"]}:{app.config["PORT"]}')
     app.run(debug=app.config['DEBUG'],
             port=app.config['PORT'],
             host=app.config['HOST'])
