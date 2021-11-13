@@ -74,6 +74,8 @@ def upload_file():
 
 @app.route('/home', methods=['POST'])
 def upload_file_testing():
+    # Clear out static folder to preserve space
+    shutil.rmtree(app.config['UPLOAD_FOLDER'])
     # check if the post request has the file part
     if 'file' not in request.files:
         return 'No file was uploaded'
