@@ -2,6 +2,7 @@ import os
 import io
 import random
 import uuid
+import shutil
 from flask import Flask, request, redirect, url_for, send_file, render_template
 from werkzeug.utils import secure_filename
 from Filters import laserEyes, noise, brightnessContrast, bulge, inpaint, sharpen
@@ -95,7 +96,8 @@ def upload_file_testing():
         filter_classes = [laserEyes.laserEyes(), noise.noise(), brightnessContrast.brightnessContrast(), bulge.bulge(), inpaint.inpaint()]
         filterClass = random.choice(filter_classes)
         filtered_image = filterClass.apply_filter(dest_file)
-        os.replace(filtered_image, dest_file)
+
+        shutil.move(filtered_image, dest_file)
         with open(dest_file, 'rb') as f:
             s = f.read()
             r.setex('test', 30, s)
