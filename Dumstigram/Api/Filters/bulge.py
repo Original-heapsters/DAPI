@@ -5,7 +5,7 @@ import random
 from wand.image import Image
 import numpy as np
 
-class laserEyes(object):
+class bulge(object):
     def __init__(self):
         dirname = os.path.dirname(__file__)
         self.resources = os.path.join(dirname, 'resources')
@@ -15,41 +15,12 @@ class laserEyes(object):
 
 
     def filter_image(self, input, coords=None):
-        if coords is None:
-            return None
-
-        laser_chosen = 'laser_' + str(random.randint(1,self.laser_count))
-        overlay = cv2.imread(self.additives + '/' + laser_chosen + '.png', -1)
-
-        def resize_overlay(dest_width, overlay):
-            ratio = dest_width / overlay.shape[1]
-            dimension = (dest_width, int(overlay.shape[0] * ratio))
-            return cv2.resize(overlay, dimension, interpolation = cv2.INTER_LINEAR)
-        def calc_position(x, y, overlay):
-            x_offset= x
-            print('x_off: ')
-            print( x_offset)
-            y_offset= y + int(overlay.shape[0] / 2)
-            print('y_off: ')
-            print( y_offset)
-            y1, y2 = y_offset, y_offset + overlay.shape[0]
-            x1, x2 = x_offset, x_offset + overlay.shape[1]
-            return x1, y1, x2, y2
-
-        def overlay_with_alpha(x1, y1, x2, y2, overlay, background):
-            alpha_over = overlay[:, :, 3] / 255.0
-            alpha_bg = 1.0 - alpha_over
-
-            for c in range(0, 3):
-                background[y1:y2, x1:x2, c] = (alpha_over * overlay[:, :, c] +
-                                          alpha_bg * background[y1:y2, x1:x2, c])
-            return background
-
-        for (x, y, w, h) in coords:
-            resized = resize_overlay(w, overlay)
-            x1,y1,x2,y2 = calc_position(x,y, resized)
-            input = overlay_with_alpha(x1, y1, x2, y2, resized, input)
-        return input
+        with Image(filename = input) as img:
+            img.virtual_pixel = 'black'
+            img.implode(-0.5)
+            img_explode_opencv = np.array(img)
+            img_explode_opencv = cv2.cvtColor(img_explode_opencv, cv2.COLOR_RGB2BGR)
+            return img_explode_opencv
 
     def identify_prep(self, input):
         grayImage = cv2.cvtColor(input, cv2.COLOR_BGR2GRAY)
@@ -70,18 +41,7 @@ class laserEyes(object):
         if debug:
             cv2.imshow('Original', original)
         coords = self.identify_features(original)
-        print('coords')
-        print(coords)
-        with Image(filename = input) as img:
-            img.virtual_pixel = 'black'
-            img.implode(-0.5)
-            img.save(filename = 'input_explode.jpg')
-            img_explode_opencv = np.array(img)
-            img_explode_opencv = cv2.cvtColor(img_explode_opencv, cv2.COLOR_RGB2BGR)
-        cv2.imshow('Buldge',img_explode_opencv)
-
-
-        filtered = self.filter_image(original, coords)
+        filtered = self.filter_image(input, coords)
 
         if debug and filtered is not None:
             cv2.imshow('Filter Applied', filtered)
@@ -94,5 +54,5 @@ class laserEyes(object):
 
 if __name__ == '__main__':
     originalImg = '../uploads/test.png'
-    filterClass = laserEyes()
+    filterClass = bulge()
     filterClass.apply_filter(originalImg, debug=True)
