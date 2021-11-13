@@ -1,4 +1,7 @@
 *.production_settings
+**/static/uploads/*
+**/uploads/*
+!**/uploads/test.png
 
 ############# AUTO GENERATED #############
 
