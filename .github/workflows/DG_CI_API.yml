@@ -28,4 +28,5 @@ jobs:
       run: |
         flake8 ${{ env.PROJECT_NAME }}/Api --count --select=E9,F63,F7,F82 --max-complexity=10 --max-line-length=127 --show-source --statistics
     - name: Test with pytest
-      run: python -m pytest ${{ env.PROJECT_NAME }}/Api/test
+      working-directory: ./${{ env.PROJECT_NAME }}/Api
+      run: python -m pytest test
