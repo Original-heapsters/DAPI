@@ -3,6 +3,9 @@ name: Deploy dumstigram to heroku.
 on:
   push:
     branches: [master]
+    paths:
+      - 'Dumstigram/Api/*'
+      - 'Dumstigram/Infra/*'
 
 jobs:
   build:
