@@ -1,0 +1,18 @@
+# syntax=docker/dockerfile:1
+
+FROM python:3.8-slim-buster
+RUN apt-get update -y
+RUN apt install -y libglib2.0-0 libsm6 libxext6 libxrender-dev
+
+WORKDIR /app
+
+COPY ./Api/requirements.txt requirements.txt
+
+RUN pip3 install -r requirements.txt
+
+COPY ./Api .
+
+EXPOSE $PORT
+EXPOSE $REDIS_URL
+
+CMD [ "python3", "app.py"]

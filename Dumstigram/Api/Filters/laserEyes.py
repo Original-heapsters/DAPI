@@ -3,6 +3,7 @@ import tempfile
 import cv2
 import random
 
+
 class laserEyes(object):
     def __init__(self):
         dirname = os.path.dirname(__file__)
