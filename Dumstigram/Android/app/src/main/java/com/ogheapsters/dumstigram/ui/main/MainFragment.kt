@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.ogheapsters.dumstigram.R
 import com.ogheapsters.dumstigram.databinding.MainFragmentBinding
 
 class MainFragment : Fragment() {
@@ -38,5 +39,7 @@ class MainFragment : Fragment() {
         viewBinding.button.setOnClickListener {
             Log.d(TAG, "Upload Image")
         }
+
+        viewBinding.imageView.setImageResource(R.drawable.ic_baseline_upload_24)
     }
 }
