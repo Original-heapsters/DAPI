@@ -73,6 +73,7 @@ def upload_file():
 
 
 def clear_dir(folder_path):
+    os.makedirs(folder_path, exist_ok=True)
     if len(os.listdir(folder_path)) > 5:
         for file_object in os.listdir(folder_path):
             file_object_path = os.path.join(folder_path, file_object)
@@ -105,12 +106,22 @@ def upload_file_testing():
         file.save(dest_file)
         app.logger.debug(f'Saving temp file to {dest_file}')
 
-        # choose random filter and apply it here
         filter_classes = [laserEyes.laserEyes(), noise.noise(), brightnessContrast.brightnessContrast(), bulge.bulge(), inpaint.inpaint()]
-        filterClass = random.choice(filter_classes)
-        filtered_image = filterClass.apply_filter(dest_file)
+        running_img = None
+        for k in range(len(filter_classes) - 1):
+            if not running_img:
+                running_img = random.choice(filter_classes).apply_filter(dest_file)
+            else:
+                running_img = random.choice(filter_classes).apply_filter(running_img)
 
-        shutil.move(filtered_image, dest_file)
+        # choose random filter and apply it here
+
+        # filterClass = random.choice(filter_classes)
+        # filtered_image = filterClass.apply_filter(dest_file)
+        # noiser = noise.noise()
+        # real_filtered_image = noiser.apply_filter(filtered_image)
+
+        shutil.move(running_img, dest_file)
         with open(dest_file, 'rb') as f:
             s = f.read()
             r.setex('test', 30, s)
