@@ -1,7 +1,8 @@
 import os
 import tempfile
 import cv2
-from wand.image import Image
+import random
+from wand.image import Image, PIXEL_INTERPOLATE_METHODS
 import numpy as np
 
 
@@ -16,7 +17,8 @@ class bulge(object):
     def filter_image(self, input, coords=None):
         with Image(filename=input) as img:
             img.virtual_pixel = 'black'
-            img.implode(-0.5)
+            img.implode(random.uniform(1, -1),
+                        random.choice(PIXEL_INTERPOLATE_METHODS))
             img_explode_opencv = np.array(img)
             img_explode_opencv = cv2.cvtColor(img_explode_opencv,
                                               cv2.COLOR_RGB2BGR)

@@ -23,9 +23,13 @@ def clear_dir(folder_path):
 
 def apply_random_filters(filters, input_img):
     running_img = None
-    for k in range(random.randint(1, len(filters) - 1)):
-        if not running_img:
-            running_img = random.choice(filters).apply_filter(input_img)
-        else:
-            running_img = random.choice(filters).apply_filter(running_img)
+    num_filters = len(filters)
+    if num_filters == 1:
+        running_img = random.choice(filters).apply_filter(input_img)
+    else:
+        for k in range(random.randint(1, num_filters - 1)):
+            if not running_img:
+                running_img = random.choice(filters).apply_filter(input_img)
+            else:
+                running_img = random.choice(filters).apply_filter(running_img)
     return running_img

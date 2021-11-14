@@ -6,10 +6,11 @@ import numpy as np
 
 
 class inpaint(object):
-    def __init__(self):
+    def __init__(self, eye_cascade, smile_cascade, face_cascade):
         dirname = os.path.dirname(__file__)
-        self.resources = os.path.join(dirname, 'resources')
-        self.additives = os.path.join(dirname, 'additives')
+        self.eye_cascade = eye_cascade
+        self.smile_cascade = smile_cascade
+        self.face_cascade = face_cascade
         self.laser_count = 5
         self.identifier = 'haar_eye_tree_glasses.xml'
 
@@ -33,11 +34,24 @@ class inpaint(object):
 
     # Find eyes
     def identify_features(self, input):
+        mode = 'eyes'
         prepped_img = self.identify_prep(input)
-        classifier = os.path.join(self.resources, self.identifier)
-        eye_cascade = cv2.CascadeClassifier(classifier)
-        eyes = eye_cascade.detectMultiScale(prepped_img)
-        return eyes
+        if mode == 'eyes':
+            print('testing')
+            print(prepped_img)
+            eyes = self.eye_cascade.detectMultiScale(prepped_img)
+            print(eyes)
+            return eyes
+        elif mode == 'smile':
+            faces = self.face_cascade.detectMultiScale(prepped_img)
+            smiles = []
+            for (x, y, w, h) in faces:
+                roi_gray = prepped_img[y:y + h, x:x + w]
+                smiles.append(self.smile_cascade.detectMultiScale(roi_gray,
+                                                                  1.8,
+                                                                  20))
+            print(smiles)
+            return smiles
 
     def apply_filter(self, input, debug=False):
         original = cv2.imread(input)
@@ -57,6 +71,9 @@ class inpaint(object):
 
 
 if __name__ == '__main__':
+    classifier = os.path.join('./resources',
+                              'haar_eye_tree_glasses.xml')
+    eye_cascade = cv2.CascadeClassifier(classifier)
     originalImg = '../uploads/test.png'
-    filterClass = inpaint()
+    filterClass = inpaint(eye_cascade)
     filterClass.apply_filter(originalImg, debug=True)

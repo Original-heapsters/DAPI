@@ -1,3 +1,4 @@
+import cv2
 import io
 import os
 import shutil
@@ -30,13 +31,22 @@ def initialize():
     global filter_classes
     redis_url = os.environ.get('REDIS_URL') or app.config['REDIS_URL']
     redis_instance = redis.Redis.from_url(redis_url)
+    eye_classifier = os.path.join('./Filters/resources',
+                                  app.config['EYE_CLASSIFIER'])
+    smile_classifier = os.path.join('./Filters/resources',
+                                    app.config['SMILE_CLASSIFIER'])
+    face_classifier = os.path.join('./Filters/resources',
+                                   app.config['FACE_CLASSIFIER'])
+    eye_cascade = cv2.CascadeClassifier(eye_classifier)
+    smile_cascade = cv2.CascadeClassifier(smile_classifier)
+    face_cascade = cv2.CascadeClassifier(face_classifier)
     filter_classes = [
-        laserEyes.laserEyes(),
-        noise.noise(),
-        brightnessContrast.brightnessContrast(),
-        bulge.bulge(),
-        inpaint.inpaint(),
-        sharpen.sharpen(),
+        # laserEyes.laserEyes(),
+        # noise.noise(),
+        # brightnessContrast.brightnessContrast(),
+        # bulge.bulge(),
+        inpaint.inpaint(eye_cascade, smile_cascade, face_cascade),
+        # sharpen.sharpen(),
         ]
 
 
