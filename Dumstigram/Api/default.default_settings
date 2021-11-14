@@ -2,6 +2,7 @@ DEBUG = True
 HOST = '0.0.0.0'
 PORT = '5001'
 REDIS_URL = 'redis://localhost:6379?db=0'
+REDIS_TTL = 30
 DB_HOST = 'sqlite:///persistence/test.db'
 UPLOAD_FOLDER = './static/uploads'
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024

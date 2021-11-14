@@ -1,16 +1,12 @@
-import os
 import tempfile
 import cv2
-import random
 import numpy as np
 
 
 class sharpen(object):
-    def __init__(self):
-        dirname = os.path.dirname(__file__)
 
     def filter_image(self, input, coords=None):
-        kernel = np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]])
+        kernel = np.array([[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]])
         adjusted = cv2.filter2D(input, -1, kernel)
 
         return adjusted

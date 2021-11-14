@@ -13,7 +13,6 @@ class inpaint(object):
         self.laser_count = 5
         self.identifier = 'haar_eye_tree_glasses.xml'
 
-
     def filter_image(self, input, coords=None):
         if coords is None:
             return None
@@ -22,7 +21,10 @@ class inpaint(object):
 
         for pts in coords:
             cv2.rectangle(mask, pts, 255, -1)
-        output = cv2.inpaint(input, mask, random.uniform(50, 100), flags=random.choice([cv2.INPAINT_TELEA]))
+        output = cv2.inpaint(input,
+                             mask,
+                             random.uniform(50, 100),
+                             flags=random.choice([cv2.INPAINT_TELEA]))
         return output
 
     def identify_prep(self, input):
@@ -32,7 +34,8 @@ class inpaint(object):
     # Find eyes
     def identify_features(self, input):
         prepped_img = self.identify_prep(input)
-        eye_cascade = cv2.CascadeClassifier(self.resources + '/' + self.identifier)
+        classifier = os.path.join(self.resources, self.identifier)
+        eye_cascade = cv2.CascadeClassifier(classifier)
         eyes = eye_cascade.detectMultiScale(prepped_img)
         return eyes
 
