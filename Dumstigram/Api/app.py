@@ -41,12 +41,12 @@ def initialize():
     smile_cascade = cv2.CascadeClassifier(smile_classifier)
     face_cascade = cv2.CascadeClassifier(face_classifier)
     filter_classes = [
-        # laserEyes.laserEyes(),
-        # noise.noise(),
-        # brightnessContrast.brightnessContrast(),
-        # bulge.bulge(),
+        laserEyes.laserEyes(),
+        noise.noise(),
+        brightnessContrast.brightnessContrast(),
+        bulge.bulge(),
         inpaint.inpaint(eye_cascade, smile_cascade, face_cascade),
-        # sharpen.sharpen(),
+        sharpen.sharpen(),
         ]
 
 

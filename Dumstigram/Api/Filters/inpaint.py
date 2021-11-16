@@ -7,16 +7,16 @@ import numpy as np
 
 class inpaint(object):
     def __init__(self, eye_cascade, smile_cascade, face_cascade):
-        dirname = os.path.dirname(__file__)
         self.eye_cascade = eye_cascade
         self.smile_cascade = smile_cascade
         self.face_cascade = face_cascade
+        self.detection_mode = 'smile'
         self.laser_count = 5
         self.identifier = 'haar_eye_tree_glasses.xml'
 
     def filter_image(self, input, coords=None):
-        if coords is None:
-            return None
+        if coords is None or len(coords) == 0:
+            return input
 
         mask = np.zeros(input.shape[:2], dtype='uint8')
 
@@ -34,23 +34,17 @@ class inpaint(object):
 
     # Find eyes
     def identify_features(self, input):
-        mode = 'eyes'
         prepped_img = self.identify_prep(input)
-        if mode == 'eyes':
-            print('testing')
-            print(prepped_img)
+        if self.detection_mode == 'eyes':
             eyes = self.eye_cascade.detectMultiScale(prepped_img)
-            print(eyes)
             return eyes
-        elif mode == 'smile':
-            faces = self.face_cascade.detectMultiScale(prepped_img)
+        elif self.detection_mode == 'smile':  # Experimental, does not work
+            faces = self.face_cascade.detectMultiScale(prepped_img, 1.3, 5)
             smiles = []
             for (x, y, w, h) in faces:
-                roi_gray = prepped_img[y:y + h, x:x + w]
-                smiles.append(self.smile_cascade.detectMultiScale(roi_gray,
+                smiles.append(self.smile_cascade.detectMultiScale(prepped_img,
                                                                   1.8,
                                                                   20))
-            print(smiles)
             return smiles
 
     def apply_filter(self, input, debug=False):

@@ -3,7 +3,7 @@ HOST = '0.0.0.0'
 PORT = '5001'
 REDIS_URL = 'redis://localhost:6379?db=0'
 REDIS_TTL = 30
-EYE_CLASSIFIER='haar_eye_tree_glasses_.xml'
+EYE_CLASSIFIER='haar_eye_tree_glasses.xml'
 SMILE_CLASSIFIER='haarcascade_smile.xml'
 FACE_CLASSIFIER='haarcascade_frontalface_default.xml'
 DB_HOST = 'sqlite:///persistence/test.db'
