@@ -10,7 +10,7 @@ class inpaint(object):
         self.eye_cascade = eye_cascade
         self.smile_cascade = smile_cascade
         self.face_cascade = face_cascade
-        self.detection_mode = 'smile'
+        self.detection_mode = 'eyes'
         self.laser_count = 5
         self.identifier = 'haar_eye_tree_glasses.xml'
 
