@@ -1,19 +1,53 @@
-import os
+import cv2
 import io
-import random
-import uuid
+import os
 import shutil
-from flask import Flask, request, redirect, url_for, send_file, render_template
+import uuid
+from utils import (allowed_file,
+                   clear_dir,
+                   apply_random_filters)
+from Filters import (laserEyes,
+                     noise,
+                     brightnessContrast,
+                     bulge,
+                     inpaint,
+                     sharpen)
 from werkzeug.utils import secure_filename
-from Filters import laserEyes, noise, brightnessContrast, bulge, inpaint, sharpen
+from flask import (Flask,
+                   request,
+                   redirect,
+                   url_for,
+                   send_file,
+                   render_template)
+
 import redis
 app = Flask(__name__)
 app.config.from_pyfile('default.default_settings')
-redis_url = os.environ.get('REDIS_URL') or app.config['REDIS_URL']
-r = redis.Redis.from_url(redis_url)
 
 
-ALLOWED_EXTENSIONS = {'PNG', 'png', 'jpg', 'jpeg'}
+@app.before_first_request
+def initialize():
+    global redis_instance
+    global filter_classes
+    redis_url = os.environ.get('REDIS_URL') or app.config['REDIS_URL']
+    redis_instance = redis.Redis.from_url(redis_url)
+    eye_classifier = os.path.join('./Filters/resources',
+                                  app.config['EYE_CLASSIFIER'])
+    smile_classifier = os.path.join('./Filters/resources',
+                                    app.config['SMILE_CLASSIFIER'])
+    face_classifier = os.path.join('./Filters/resources',
+                                   app.config['FACE_CLASSIFIER'])
+    eye_cascade = cv2.CascadeClassifier(eye_classifier)
+    smile_cascade = cv2.CascadeClassifier(smile_classifier)
+    face_cascade = cv2.CascadeClassifier(face_classifier)
+    filter_classes = [
+        laserEyes.laserEyes(),
+        noise.noise(),
+        brightnessContrast.brightnessContrast(),
+        bulge.bulge(),
+        inpaint.inpaint(eye_cascade, smile_cascade, face_cascade),
+        sharpen.sharpen(),
+        ]
 
 
 @app.route('/')
@@ -28,67 +62,10 @@ def swag():
 
 @app.route('/home')
 def upload_form():
-	return render_template('upload.html')
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return render_template('upload.html')
 
 
-@app.route('/upload', methods=['POST'])
-def upload_file():
-    # check if the post request has the file part
-    if 'file' not in request.files:
-        return 'No file was uploaded'
-
-    file = request.files['file']
-    # if user does not select file, browser also
-    # submit an empty part without filename
-    if file.filename == '':
-        return 'No selected file'
-
-    if file and allowed_file(file.filename):
-        file_components = file.filename.rsplit('.', 1)
-        name = str(hash(file_components[0]))
-        filename = secure_filename(name + '.' + file_components[-1])
-        dest_file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(dest_file)
-        app.logger.debug(f'Saving temp file to {dest_file}')
-
-        # choose random filter and apply it here
-        filter_classes = [laserEyes.laserEyes(), noise.noise(), brightnessContrast.brightnessContrast(), bulge.bulge(), inpaint.inpaint()]
-        running_img = None
-        for k in range(random.randint(1, len(filter_classes) - 1)):
-            if not running_img:
-                running_img = random.choice(filter_classes).apply_filter(dest_file)
-            else:
-                running_img = random.choice(filter_classes).apply_filter(running_img)
-        with open(running_img, 'rb') as f:
-            s = f.read()
-            r.setex('test', 30, s)
-            app.logger.debug('Saving temp file to redis key test')
-            os.remove(dest_file)
-
-        return send_file(
-            io.BytesIO(r.get('test')),
-            as_attachment=True,
-            attachment_filename=running_img
-        )
-
-
-def clear_dir(folder_path):
-    os.makedirs(folder_path, exist_ok=True)
-    if len(os.listdir(folder_path)) > 5:
-        for file_object in os.listdir(folder_path):
-            file_object_path = os.path.join(folder_path, file_object)
-            if os.path.isfile(file_object_path) or os.path.islink(file_object_path):
-                os.unlink(file_object_path)
-            else:
-                shutil.rmtree(file_object_path)
-
-
-@app.route('/home', methods=['POST'])
-def upload_file_testing():
+def process_image():
     # Clear out static folder to preserve space
     clear_dir(app.config['UPLOAD_FOLDER'])
 
@@ -110,32 +87,49 @@ def upload_file_testing():
         file.save(dest_file)
         app.logger.debug(f'Saving temp file to {dest_file}')
 
-        filter_classes = [laserEyes.laserEyes(), noise.noise(), brightnessContrast.brightnessContrast(), bulge.bulge(), inpaint.inpaint()]
-        running_img = None
-        for k in range(random.randint(1, len(filter_classes) - 1)):
-            if not running_img:
-                running_img = random.choice(filter_classes).apply_filter(dest_file)
-            else:
-                running_img = random.choice(filter_classes).apply_filter(running_img)
+        filtered_img = apply_random_filters(filter_classes, dest_file)
 
-        shutil.move(running_img, dest_file)
+        # Replace uploaded img with filtered version
+        shutil.move(filtered_img, dest_file)
         with open(dest_file, 'rb') as f:
-            s = f.read()
-            r.setex('test', 30, s)
-            app.logger.debug('Saving temp file to redis key test')
+            file_bytes = f.read()
+            redis_instance.setex(name, app.config['REDIS_TTL'], file_bytes)
+            app.logger.debug(f'Saving filtered img bytes to redis key {name}')
 
+        return filename, name
+    return f'File not allowed {file.filename}'
+
+
+@app.route('/home', methods=['POST'])
+def upload_file_testing():
+    result = process_image()
+    filename, _ = result
+    if filename:
         return render_template('upload.html', filename=filename)
+    else:
+        return result
+
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    result = process_image()
+    filename, name = result
+    if name:
+        return send_file(
+            io.BytesIO(redis_instance.get(name)),
+            as_attachment=True,
+            attachment_filename=filename
+        )
+    else:
+        return result
 
 
 @app.route('/display/<filename>')
 def display_image(filename):
-    print(filename)
-    return redirect(url_for('static', filename='uploads/' + filename), code=301)
-
-
-@app.route('/uploads/<filename>')
-def uploaded_file(filename):
-    return send_file(filename)
+    return redirect(
+            url_for('static', filename='uploads/' + filename),
+            code=301
+            )
 
 
 if __name__ == '__main__':
