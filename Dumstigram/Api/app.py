@@ -57,7 +57,7 @@ def hello():
 
 @app.route('/420')
 def swag():
-    return "69 BROOOOO!"
+    return "69 BROOOOOO!"
 
 
 @app.route('/home')
