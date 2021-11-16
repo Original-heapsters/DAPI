@@ -26,13 +26,13 @@ class noise(object):
                 num_salt = np.ceil(amount * image.size * s_vs_p)
                 coords = [np.random.randint(0, i - 1, int(num_salt))
                           for i in image.shape]
-                out[coords] = 1
+                out[coords] = (1)
 
                 # Pepper mode
                 num_pepper = np.ceil(amount * image.size * (1. - s_vs_p))
                 coords = [np.random.randint(0, i - 1, int(num_pepper))
                           for i in image.shape]
-                out[coords] = 0
+                out[coords] = (0)
                 return out
             elif noise_typ == "poisson":
                 vals = len(np.unique(image))
@@ -46,7 +46,7 @@ class noise(object):
                 noisy = image + image * gauss
                 return noisy
 
-        noisy_types = ['gauss', 's&p', 'poisson', 'speckle']
+        noisy_types = ['gauss', 'poisson', 'speckle']  # , 's&p']
         noisy_array = noisy(random.choice(noisy_types), input)
         return noisy_array
 
