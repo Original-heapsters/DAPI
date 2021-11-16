@@ -22,4 +22,5 @@ pytest==6.0.1
 redis==3.5.3
 six==1.15.0
 toml==0.10.1
+Wand==0.6.7
 Werkzeug==1.0.1
