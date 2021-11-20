@@ -12,6 +12,15 @@ class laserEyes(object):
         self.laser_count = 5
         self.identifier = 'haar_eye_tree_glasses.xml'
 
+    def get_info(self):
+        return {
+                'name': __class__.__name__,
+                'description': """Add random set of lasers on detected eyes""",
+                'randomized_aspects': ['laser chosen'],
+                'performance_impact': 2,
+                'requires_face': True,
+                }
+
     def filter_image(self, input, coords=None):
         if coords is None:
             return None

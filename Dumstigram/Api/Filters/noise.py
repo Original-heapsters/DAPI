@@ -6,6 +6,15 @@ import cv2
 
 class noise(object):
 
+    def get_info(self):
+        return {
+                'name': __class__.__name__,
+                'description': """Adds random forms of image noise""",
+                'randomized_aspects': ['noise method', 's vs p amount'],
+                'performance_impact': 2,
+                'requires_face': False,
+                }
+
     def filter_image(self, input, coords=None):
         def noisy(noise_typ, image):
             if noise_typ == "gauss":
