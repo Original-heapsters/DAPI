@@ -85,18 +85,13 @@
 					]
 				},
 				"url": {
-					"raw": "{{server}}/home?asApi=true",
+					"raw": "{{server}}/filters/brightness",
 					"host": [
 						"{{server}}"
 					],
 					"path": [
-						"home"
-					],
-					"query": [
-						{
-							"key": "asApi",
-							"value": "true"
-						}
+						"filters",
+						"brightness"
 					]
 				}
 			},
@@ -125,12 +120,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{server}}/filters",
+					"raw": "{{server}}/filters/laserEyes",
 					"host": [
 						"{{server}}"
 					],
 					"path": [
-						"filters"
+						"filters",
+						"laserEyes"
 					]
 				}
 			},
