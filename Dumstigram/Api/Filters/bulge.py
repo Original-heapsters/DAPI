@@ -14,6 +14,15 @@ class bulge(object):
         self.laser_count = 5
         self.identifier = 'haar_eye_tree_glasses.xml'
 
+    def get_info(self):
+        return {
+                'name': __class__.__name__,
+                'description': """im/explodes the center of image""",
+                'randomized_aspects': ['bulge amount'],
+                'performance_impact': 2,
+                'requires_face': False,
+                }
+
     def filter_image(self, input, coords=None):
         with Image(filename=input) as img:
             img.virtual_pixel = 'black'

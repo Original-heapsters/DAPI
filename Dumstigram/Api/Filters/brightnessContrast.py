@@ -5,6 +5,15 @@ import random
 
 class brightnessContrast(object):
 
+    def get_info(self):
+        return {
+                'name': __class__.__name__,
+                'description': """Adjusts brightness and contrast of image""",
+                'randomized_aspects': ['contrast amount', 'brightness amount'],
+                'performance_impact': 1,
+                'requires_face': False,
+                }
+
     def filter_image(self, input, coords=None):
         alpha = random.uniform(1.0, 3.0)  # Contrast control (1.0-3.0)
         beta = random.uniform(0, 100)  # Brightness control (0-100)

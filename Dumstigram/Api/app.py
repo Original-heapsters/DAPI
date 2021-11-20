@@ -14,6 +14,7 @@ from Filters import (laserEyes,
                      sharpen)
 from werkzeug.utils import secure_filename
 from flask import (Flask,
+                   jsonify,
                    request,
                    redirect,
                    url_for,
@@ -40,14 +41,14 @@ def initialize():
     eye_cascade = cv2.CascadeClassifier(eye_classifier)
     smile_cascade = cv2.CascadeClassifier(smile_classifier)
     face_cascade = cv2.CascadeClassifier(face_classifier)
-    filter_classes = [
-        laserEyes.laserEyes(),
-        noise.noise(),
-        brightnessContrast.brightnessContrast(),
-        bulge.bulge(),
-        inpaint.inpaint(eye_cascade, smile_cascade, face_cascade),
-        sharpen.sharpen(),
-        ]
+    filter_classes = {
+        'laserEyes': laserEyes.laserEyes(),
+        'noise': noise.noise(),
+        'brightness': brightnessContrast.brightnessContrast(),
+        'bulge': bulge.bulge(),
+        'inpaint': inpaint.inpaint(eye_cascade, smile_cascade, face_cascade),
+        'sharpen': sharpen.sharpen(),
+        }
 
 
 @app.route('/')
@@ -65,7 +66,7 @@ def upload_form():
     return render_template('upload.html')
 
 
-def process_image():
+def process_image(filter_name=None):
     # Clear out static folder to preserve space
     clear_dir(app.config['UPLOAD_FOLDER'])
 
@@ -87,7 +88,12 @@ def process_image():
         file.save(dest_file)
         app.logger.debug(f'Saving temp file to {dest_file}')
 
-        filtered_img = apply_random_filters(filter_classes, dest_file)
+        if filter_name and filter_classes[filter_name]:
+            chosen_filter = filter_classes[filter_name]
+            filtered_img = apply_random_filters([chosen_filter], dest_file)
+        else:
+            possible_filters = list(filter_classes.values())
+            filtered_img = apply_random_filters(possible_filters, dest_file)
 
         # Replace uploaded img with filtered version
         shutil.move(filtered_img, dest_file)
@@ -101,27 +107,47 @@ def process_image():
 
 
 @app.route('/home', methods=['POST'])
-def upload_file_testing():
-    result = process_image()
-    filename, _ = result
-    if filename:
-        return render_template('upload.html', filename=filename)
-    else:
-        return result
-
-
-@app.route('/upload', methods=['POST'])
 def upload_file():
+    asApi = request.args.get('asApi')
     result = process_image()
     filename, name = result
-    if name:
+    if asApi and name:
+        # send file as attachment as api response
         return send_file(
             io.BytesIO(redis_instance.get(name)),
             as_attachment=True,
             attachment_filename=filename
         )
+    elif not asApi and filename:
+        # re-render to barebones frontend
+        return render_template('upload.html', filename=filename)
     else:
         return result
+
+
+@app.route('/filters/<filter_name>', methods=['POST'])
+def isolate_filter(filter_name):
+    result = process_image(filter_name)
+    filename, name = result
+
+    # send file as attachment as api response
+    return send_file(
+        io.BytesIO(redis_instance.get(name)),
+        as_attachment=True,
+        attachment_filename=filename
+    )
+
+
+@app.route('/filters/<filter_name>', methods=['GET'])
+def get_filter_info(filter_name):
+    # send file as attachment as api response
+    print(filter_classes[filter_name].get_info())
+    return jsonify(filter_classes[filter_name].get_info())
+
+
+@app.route('/filters', methods=['GET'])
+def get_filter_names():
+    return jsonify(list(filter_classes.keys()))
 
 
 @app.route('/display/<filename>')
