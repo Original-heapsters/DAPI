@@ -33,16 +33,3 @@ def apply_random_filters(filters, input_img):
             else:
                 running_img = random.choice(filters).apply_filter(running_img)
     return running_img
-
-# def filter_by_name(filters, input_img, desired_filter):
-#     running_img = None
-#     if desired_filter not in filters
-#     if num_filters == 1:
-#         running_img = random.choice(filters).apply_filter(input_img)
-#     else:
-#         for k in range(random.randint(1, num_filters - 1)):
-#             if not running_img:
-#                 running_img = random.choice(filters).apply_filter(input_img)
-#             else:
-#                 running_img = random.choice(filters).apply_filter(running_img)
-#     return running_img
