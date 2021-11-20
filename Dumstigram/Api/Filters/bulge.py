@@ -2,8 +2,9 @@ import os
 import tempfile
 import cv2
 import random
-from wand.image import Image
+from wand.image import Image, PIXEL_INTERPOLATE_METHODS
 import numpy as np
+
 
 class bulge(object):
     def __init__(self):
@@ -13,13 +14,23 @@ class bulge(object):
         self.laser_count = 5
         self.identifier = 'haar_eye_tree_glasses.xml'
 
+    def get_info(self):
+        return {
+                'name': __class__.__name__,
+                'description': """im/explodes the center of image""",
+                'randomized_aspects': ['bulge amount'],
+                'performance_impact': 2,
+                'requires_face': False,
+                }
 
     def filter_image(self, input, coords=None):
-        with Image(filename = input) as img:
+        with Image(filename=input) as img:
             img.virtual_pixel = 'black'
-            img.implode(-0.5)
+            img.implode(random.uniform(1, -1),
+                        random.choice(PIXEL_INTERPOLATE_METHODS))
             img_explode_opencv = np.array(img)
-            img_explode_opencv = cv2.cvtColor(img_explode_opencv, cv2.COLOR_RGB2BGR)
+            img_explode_opencv = cv2.cvtColor(img_explode_opencv,
+                                              cv2.COLOR_RGB2BGR)
             return img_explode_opencv
 
     def identify_prep(self, input):
@@ -29,14 +40,13 @@ class bulge(object):
     # Find eyes
     def identify_features(self, input):
         prepped_img = self.identify_prep(input)
-        eye_cascade = cv2.CascadeClassifier(self.resources + '/' + self.identifier)
+        classifier = os.path.join(self.resources, self.identifier)
+        eye_cascade = cv2.CascadeClassifier(classifier)
         eyes = eye_cascade.detectMultiScale(prepped_img)
-        #print (eyes)
         return eyes
 
     def apply_filter(self, input, debug=False):
         original = cv2.imread(input)
-
 
         if debug:
             cv2.imshow('Original', original)

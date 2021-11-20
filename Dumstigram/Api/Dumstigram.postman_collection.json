@@ -1,0 +1,162 @@
+{
+	"info": {
+		"_postman_id": "3399deeb-0d77-43cb-8b73-73265f9e6f76",
+		"name": "Dumstigram",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Hello World",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{server}}",
+					"host": [
+						"{{server}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "420",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{server}}/420",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"420"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Image Upload",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/home/russell/Downloads/selfie4.jpeg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{server}}/home?asApi=true",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"home"
+					],
+					"query": [
+						{
+							"key": "asApi",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test specific image in isolation",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/home/russell/Downloads/selfie4.jpeg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{server}}/filters/brightness",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"filters",
+						"brightness"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get possible fitler names",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{server}}/filters",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"filters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get detailed filter info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{server}}/filters/laserEyes",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"filters",
+						"laserEyes"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "server",
+			"value": "localhost:5001"
+		}
+	]
+}

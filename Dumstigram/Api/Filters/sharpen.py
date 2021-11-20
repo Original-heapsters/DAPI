@@ -1,4 +1,3 @@
-import os
 import tempfile
 import cv2
 import random
@@ -6,11 +5,21 @@ import numpy as np
 
 
 class sharpen(object):
-    def __init__(self):
-        dirname = os.path.dirname(__file__)
+
+    def get_info(self):
+        return {
+                'name': __class__.__name__,
+                'description': """Modifies the resolution and contrast around
+                edges to give the appearance of a 'sharper' image""",
+                'randomized_aspects': ['kernel'],
+                'performance_impact': 1,
+                'requires_face': False,
+                }
 
     def filter_image(self, input, coords=None):
-        kernel = np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]])
+        kernel = np.array([[-1, -1, -1],
+                           [-1, random.uniform(8, 13), -1],
+                           [-1, -1, -1]])
         adjusted = cv2.filter2D(input, -1, kernel)
 
         return adjusted

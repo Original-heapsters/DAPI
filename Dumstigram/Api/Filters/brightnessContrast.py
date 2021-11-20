@@ -1,12 +1,18 @@
-import os
 import tempfile
 import cv2
 import random
 
 
 class brightnessContrast(object):
-    def __init__(self):
-        dirname = os.path.dirname(__file__)
+
+    def get_info(self):
+        return {
+                'name': __class__.__name__,
+                'description': """Adjusts brightness and contrast of image""",
+                'randomized_aspects': ['contrast amount', 'brightness amount'],
+                'performance_impact': 1,
+                'requires_face': False,
+                }
 
     def filter_image(self, input, coords=None):
         alpha = random.uniform(1.0, 3.0)  # Contrast control (1.0-3.0)
