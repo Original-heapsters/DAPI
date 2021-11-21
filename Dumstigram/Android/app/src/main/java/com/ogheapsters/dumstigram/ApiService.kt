@@ -33,7 +33,7 @@ interface ApiService {
     }
 
     @Multipart
-    @POST("home")
-    suspend fun submitImage(@Part part: MultipartBody.Part): String
+    @POST("home?asApi=true")
+    suspend fun submitImage(@Part file: MultipartBody.Part): ResponseBody
 
 }
