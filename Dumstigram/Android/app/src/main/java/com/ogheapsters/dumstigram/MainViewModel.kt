@@ -1,58 +1,63 @@
 package com.ogheapsters.dumstigram
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
-import android.net.Uri
-import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.Composable
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.*
 import java.util.*
-import android.graphics.Bitmap
-
-import android.graphics.drawable.BitmapDrawable
-import androidx.core.graphics.drawable.toBitmap
-import java.io.ByteArrayOutputStream
-
 
 class MainViewModel : ViewModel() {
 
-    private val _imageUri: MutableState<Uri?> = mutableStateOf(null)
-    val imageUri: State<Uri?>
-        get() = _imageUri
+    fun saveBitmapToCache(context: Context, name: String, bitmap: Bitmap): File? {
+        val cacheDirectoryPath = context.cacheDir.path + "/image"
+        val cacheDirectory = File(cacheDirectoryPath)
+        cacheDirectory.mkdir()
 
-    var movieListResponse: MutableState<String> = mutableStateOf("")
-    var errorMessage: MutableState<String> = mutableStateOf("")
+        val tempFile = File(cacheDirectory, "${name}.jpg")
+        tempFile.createNewFile()
 
-    fun setImageUri(uri: Uri?) {
-        _imageUri.value = uri
+        val outputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+        val bitmapByteArray: ByteArray = outputStream.toByteArray()
+
+        val fos: FileOutputStream = try {
+            FileOutputStream(tempFile)
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+            return null
+        }
+        try {
+            fos.write(bitmapByteArray)
+            fos.flush()
+            fos.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return tempFile
     }
 
-    fun submitImage(drawable: Drawable?) {
-        if (drawable == null) return
-
-        viewModelScope.launch {
-            val apiService = ApiService.getInstance()
-
-            val stream = ByteArrayOutputStream()
-            drawable.toBitmap().compress(Bitmap.CompressFormat.JPEG, 100, stream)
-            val bitmapByteArray: ByteArray = stream.toByteArray()
-
-            val requestFile = bitmapByteArray.toRequestBody("image/*".toMediaTypeOrNull(), 0, bitmapByteArray.size)
-            val body = MultipartBody.Part.createFormData("image", UUID.randomUUID().toString(), requestFile)
-
-            try {
-                val submitImageRequest = apiService.submitImage(body)
-                Log.d("RESPONSE", submitImageRequest)
-                movieListResponse.value = submitImageRequest
-            } catch (e: Exception) {
-                errorMessage.value = e.message.toString()
-            }
-        }
+    suspend fun dumbifyImage(someFile: File?, context: Context): File? = withContext(Dispatchers.IO) {
+        val file = someFile ?: return@withContext null
+        val apiService = ApiService.getInstance()
+        val requestFile = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val body = MultipartBody.Part.createFormData(
+            "file",
+            UUID.randomUUID().toString() + ".jpg",
+            requestFile
+        )
+        val submitImageResponse = apiService.submitImage(body)
+        val bufferedInputStream = BufferedInputStream(submitImageResponse.byteStream())
+        val bitmap = BitmapFactory.decodeStream(bufferedInputStream)
+        val cachedImageFile = saveBitmapToCache(context, UUID.randomUUID().toString(), bitmap)
+        return@withContext cachedImageFile
     }
 }
