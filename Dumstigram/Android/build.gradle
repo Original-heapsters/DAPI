@@ -6,13 +6,7 @@ buildscript {
     }
     dependencies {
         classpath "com.android.tools.build:gradle:7.0.3"
-
-        /*
-        Note from Andrew:
-        Kotlin is set to 1.4.32 to allow for the Jetpack Compose preview window to work.
-        In the future when this library is updated, see if it will still work properly.
-         */
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.32"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10"
     }
 }
 
