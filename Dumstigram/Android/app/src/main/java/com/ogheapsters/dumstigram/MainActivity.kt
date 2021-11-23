@@ -3,9 +3,7 @@ package com.ogheapsters.dumstigram
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -15,27 +13,31 @@ import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.Error
 import androidx.compose.material.icons.twotone.Image
-import androidx.compose.material.icons.twotone.SendToMobile
+import androidx.compose.material.icons.twotone.Send
 import androidx.compose.material.icons.twotone.Share
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.BottomStart
 import androidx.compose.ui.Alignment.Companion.Center
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmap
-import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
@@ -43,13 +45,11 @@ import coil.request.CachePolicy
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ogheapsters.dumstigram.ui.theme.DumstigramTheme
-import com.ogheapsters.dumstigram.ui.theme.NavigationBarColor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.*
 import java.util.*
-import androidx.core.content.FileProvider
 
 
 sealed class MainActivityState {
@@ -58,6 +58,7 @@ sealed class MainActivityState {
     data class ImageSelected(val file: File?) : MainActivityState()
     object ImageSent : MainActivityState()
     data class ImageReceived(val file: File?) : MainActivityState()
+    data class Error(val exception: Throwable) : MainActivityState()
 }
 
 class MainActivity : ComponentActivity() {
@@ -79,7 +80,6 @@ class MainActivity : ComponentActivity() {
 fun MainActivityContentView(viewModel: MainViewModel, lifecycleScope: CoroutineScope) {
     val systemUiController = rememberSystemUiController()
     val useDarkIcons = MaterialTheme.colors.isLight
-    val navigationBarColor = NavigationBarColor
     val viewState: MutableState<MainActivityState> =
         remember { mutableStateOf(MainActivityState.Empty) }
 
@@ -88,42 +88,21 @@ fun MainActivityContentView(viewModel: MainViewModel, lifecycleScope: CoroutineS
             color = Color.Transparent,
             darkIcons = useDarkIcons
         )
-        systemUiController.setNavigationBarColor(
-            color = navigationBarColor,
-            darkIcons = useDarkIcons
-        )
+//        systemUiController.setNavigationBarColor(
+//            color = navigationBarColor,
+//            darkIcons = useDarkIcons
+//        )
     }
 
     Scaffold(
-        floatingActionButton = {
-            val context = LocalContext.current
-            when (val state = viewState.value) {
-                is MainActivityState.ImageSelected -> {
-                    SendImageButton {
-                        lifecycleScope.launch {
-                            val dumbBitmapFile = viewModel.dumbifyImage(state.file, context)
-                            viewState.value = MainActivityState.ImageReceived(dumbBitmapFile)
-                        }
-                        viewState.value = MainActivityState.ImageSent
-                    }
-                }
-                is MainActivityState.ImageReceived -> {
-                    SendImageButton {
-                        lifecycleScope.launch {
-                            val dumbBitmap = viewModel.dumbifyImage(state.file, context)
-                            viewState.value = MainActivityState.ImageReceived(dumbBitmap)
-                        }
-                        viewState.value = MainActivityState.ImageSent
-                    }
-                }
-                else -> {}
-            }
-        },
-        isFloatingActionButtonDocked = true,
         bottomBar = { BottomNavigationBar(viewState, viewModel) },
         topBar = { TopToolbar() }
     ) { contentPadding ->
-        Box(contentAlignment = Center, modifier = Modifier.fillMaxSize()) {
+        Box(
+            contentAlignment = Center, modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding)
+        ) {
             when (val state = viewState.value) {
                 MainActivityState.Empty -> {
                     Text(text = "Choose an image", modifier = Modifier.offset(y = (-40).dp))
@@ -139,8 +118,13 @@ fun MainActivityContentView(viewModel: MainViewModel, lifecycleScope: CoroutineS
                             diskCachePolicy(CachePolicy.DISABLED)
                         }
                     )
+                    MainImageView(imagePainter)
 
-                    MainImageView(imagePainter, contentPadding)
+                    FilterList(
+                        modifier = Modifier
+                            .align(BottomStart),
+                        viewModel = viewModel
+                    )
                 }
                 MainActivityState.ImageSent -> {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -158,7 +142,23 @@ fun MainActivityContentView(viewModel: MainViewModel, lifecycleScope: CoroutineS
                         }
                     )
 
-                    MainImageView(imagePainter, contentPadding)
+                    MainImageView(imagePainter)
+                    FilterList(
+                        modifier = Modifier
+                            .align(BottomStart),
+                        viewModel = viewModel
+                    )
+                }
+                is MainActivityState.Error -> {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            Icons.TwoTone.Error,
+                            contentDescription = null,
+                            tint = MaterialTheme.colors.error
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = state.exception.localizedMessage ?: "Unknown error")
+                    }
                 }
             }
         }
@@ -175,17 +175,12 @@ fun TopToolbar() {
             LocalContext.current,
             R.drawable.ic_logo
         )
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .align(CenterVertically)
-        ) {
+        Box(modifier = Modifier.fillMaxSize()) {
             Image(
                 painter = rememberDrawablePainter(drawable = drawable),
                 modifier = Modifier
                     .width(164.dp)
-                    .align(Center)
-                    .offset(y = 4.dp),
+                    .align(BottomStart),
                 contentDescription = "App Logo",
                 colorFilter = ColorFilter.tint(MaterialTheme.colors.onBackground),
                 contentScale = ContentScale.Fit,
@@ -204,13 +199,19 @@ fun BottomNavigationBar(viewState: MutableState<MainActivityState>, viewModel: M
         val uri = it ?: return@rememberLauncherForActivityResult
         val inputStream = context.contentResolver.openInputStream(uri)
         val drawable = Drawable.createFromStream(inputStream, uri.toString())
-        viewModel.saveBitmapToCache(context, UUID.randomUUID().toString(), drawable.toBitmap())
-            ?.let { file ->
-                viewState.value = MainActivityState.ImageSelected(file)
+        val randomFileName = UUID.randomUUID().toString()
+        when (val savedBitmapResult =
+            viewModel.saveBitmapToCache(context, randomFileName, drawable.toBitmap())) {
+            is Result.Success -> {
+                viewState.value = MainActivityState.ImageSelected(savedBitmapResult.value)
             }
+            is Result.Failure -> {
+                viewState.value = MainActivityState.Error(savedBitmapResult.reason)
+            }
+        }
     }
 
-    fun shareImage(context: Context, file: File) {
+    fun shareImage(file: File, context: Context) {
         val contentUri =
             FileProvider.getUriForFile(context, "com.ogheapsters.dumstigram.fileprovider", file)
 
@@ -228,22 +229,59 @@ fun BottomNavigationBar(viewState: MutableState<MainActivityState>, viewModel: M
             CornerSize(percent = 50)
         )
     ) {
-        BottomBarButtonItem(Icons.TwoTone.Image) {
-            launcher.launch("image/*")
+        if (viewState.value != MainActivityState.Loading && viewState.value != MainActivityState.ImageSent) {
+            SelectImageButton {
+                launcher.launch("image/*")
+            }
         }
 
         when (val state = viewState.value) {
-            is MainActivityState.ImageReceived -> {
-                BottomBarButtonItem(Icons.TwoTone.Share) {
+            is MainActivityState.ImageSelected -> {
+                ShareImageButton {
                     state.file?.let { file ->
-                        shareImage(context, file)
+                        shareImage(file, context)
+                    }
+                }
+                SendImageButton {
+                    viewState.value = MainActivityState.ImageSent
+                    state.file?.let { file ->
+                        viewModel.viewModelScope.launch {
+                            when (val dumbImageResult = viewModel.dumbifyImage(file, context)) {
+                                is Result.Success -> {
+                                    viewState.value =
+                                        MainActivityState.ImageReceived(dumbImageResult.value)
+                                }
+                                is Result.Failure -> {
+                                    viewState.value =
+                                        MainActivityState.Error(dumbImageResult.reason)
+                                }
+                            }
+                        }
                     }
                 }
             }
-            is MainActivityState.ImageSelected -> {
-                BottomBarButtonItem(Icons.TwoTone.Share) {
+
+            is MainActivityState.ImageReceived -> {
+                ShareImageButton {
                     state.file?.let { file ->
-                        shareImage(context, file)
+                        shareImage(file, context)
+                    }
+                }
+                SendImageButton {
+                    viewState.value = MainActivityState.ImageSent
+                    state.file?.let { file ->
+                        viewModel.viewModelScope.launch {
+                            when (val dumbImageResult = viewModel.dumbifyImage(file, context)) {
+                                is Result.Success -> {
+                                    viewState.value =
+                                        MainActivityState.ImageReceived(dumbImageResult.value)
+                                }
+                                is Result.Failure -> {
+                                    viewState.value =
+                                        MainActivityState.Error(dumbImageResult.reason)
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -253,10 +291,20 @@ fun BottomNavigationBar(viewState: MutableState<MainActivityState>, viewModel: M
 }
 
 @Composable
-fun BottomBarButtonItem(imageVector: ImageVector, onClick: () -> Unit) {
+fun SelectImageButton(onClick: () -> Unit) {
     IconButton(onClick = onClick) {
         Icon(
-            imageVector,
+            Icons.TwoTone.Image,
+            contentDescription = null
+        )
+    }
+}
+
+@Composable
+fun ShareImageButton(onClick: () -> Unit) {
+    IconButton(onClick = onClick) {
+        Icon(
+            Icons.TwoTone.Share,
             contentDescription = null
         )
     }
@@ -264,33 +312,39 @@ fun BottomBarButtonItem(imageVector: ImageVector, onClick: () -> Unit) {
 
 @Composable
 fun SendImageButton(onClick: () -> Unit) {
-    FloatingActionButton(
-        onClick = { onClick() },
-        contentColor = MaterialTheme.colors.onPrimary,
-        backgroundColor = MaterialTheme.colors.primary,
-    ) {
+    IconButton(onClick = onClick) {
         Icon(
-            Icons.TwoTone.SendToMobile,
-            contentDescription = null,
+            Icons.TwoTone.Send,
+            contentDescription = null
         )
     }
 }
 
 @Composable
-fun MainImageView(painter: ImagePainter, contentPadding: PaddingValues) {
+fun MainImageView(painter: ImagePainter) {
     Image(
         painter = painter,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                start = 0.dp,
-                top = contentPadding.calculateTopPadding() + 8.dp,
-                end = 0.dp,
-                bottom = contentPadding.calculateBottomPadding() + 48.dp
-            ),
+        modifier = Modifier.fillMaxSize(),
         contentDescription = null,
         contentScale = ContentScale.FillWidth,
     )
+}
+
+@Composable
+fun FilterList(viewModel: MainViewModel, modifier: Modifier) {
+    val listState = rememberLazyListState()
+
+    LazyRow(
+        modifier = modifier
+            .fillMaxWidth()
+            .offset(y = -(8.dp)), state = listState
+    ) {
+        items(viewModel.filterList) { filter ->
+            Chip(name = filter, isSelected = viewModel.selectedFilter == filter) {
+                viewModel.selectedFilter = filter
+            }
+        }
+    }
 }
 
 @Preview(showSystemUi = false, uiMode = UI_MODE_NIGHT_YES)

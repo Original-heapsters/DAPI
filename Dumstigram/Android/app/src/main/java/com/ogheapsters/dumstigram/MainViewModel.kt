@@ -3,11 +3,13 @@ package com.ogheapsters.dumstigram
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.drawable.Drawable
-import androidx.compose.runtime.Composable
-import androidx.core.graphics.drawable.toBitmap
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -17,7 +19,27 @@ import java.util.*
 
 class MainViewModel : ViewModel() {
 
-    fun saveBitmapToCache(context: Context, name: String, bitmap: Bitmap): File? {
+    private var apiService: ApiService = ApiService.instance
+
+    var filterList by mutableStateOf<List<String>>(listOf())
+        private set
+
+    var selectedFilter by mutableStateOf<String?>(null)
+
+    init {
+        viewModelScope.launch {
+            when (val listFromServer = fetchFilters()) {
+                is Result.Success -> {
+                    filterList = listFromServer.value
+                }
+                is Result.Failure -> {
+
+                }
+            }
+        }
+    }
+
+    fun saveBitmapToCache(context: Context, name: String, bitmap: Bitmap): Result<File, Throwable> {
         val cacheDirectoryPath = context.cacheDir.path + "/image"
         val cacheDirectory = File(cacheDirectoryPath)
         cacheDirectory.mkdir()
@@ -33,7 +55,7 @@ class MainViewModel : ViewModel() {
             FileOutputStream(tempFile)
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
-            return null
+            return Result.Failure(e)
         }
         try {
             fos.write(bitmapByteArray)
@@ -41,23 +63,48 @@ class MainViewModel : ViewModel() {
             fos.close()
         } catch (e: IOException) {
             e.printStackTrace()
+            return Result.Failure(e)
         }
-        return tempFile
+        return Result.Success(tempFile)
     }
 
-    suspend fun dumbifyImage(someFile: File?, context: Context): File? = withContext(Dispatchers.IO) {
-        val file = someFile ?: return@withContext null
-        val apiService = ApiService.getInstance()
+    private suspend fun fetchFilters(): Result<List<String>, Throwable> = withContext(Dispatchers.IO) {
+        try {
+            val response = apiService.fetchFilters()
+            return@withContext Result.Success(response)
+        } catch(e: Throwable) {
+            return@withContext Result.Failure(e)
+        }
+    }
+
+    suspend fun dumbifyImage(file: File, context: Context): Result<File, Throwable> = withContext(Dispatchers.IO) {
         val requestFile = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
         val body = MultipartBody.Part.createFormData(
             "file",
             UUID.randomUUID().toString() + ".jpg",
             requestFile
         )
-        val submitImageResponse = apiService.submitImage(body)
-        val bufferedInputStream = BufferedInputStream(submitImageResponse.byteStream())
-        val bitmap = BitmapFactory.decodeStream(bufferedInputStream)
-        val cachedImageFile = saveBitmapToCache(context, UUID.randomUUID().toString(), bitmap)
-        return@withContext cachedImageFile
+
+        val bitmap: Bitmap
+        try {
+            val submitImageResponse = if (selectedFilter != null) apiService.filterImage(body, selectedFilter!!) else apiService.submitImage(body)
+            val bufferedInputStream = BufferedInputStream(submitImageResponse.byteStream())
+            bitmap = BitmapFactory.decodeStream(bufferedInputStream)
+        } catch(error: Exception) {
+            return@withContext Result.Failure(error)
+        }
+
+        try {
+            when (val cachedImageFile = saveBitmapToCache(context, UUID.randomUUID().toString(), bitmap)) {
+                is Result.Success -> {
+                    return@withContext Result.Success(cachedImageFile.value)
+                }
+                is Result.Failure -> {
+                    return@withContext Result.Failure(cachedImageFile.reason)
+                }
+            }
+        } catch(error: Exception) {
+            return@withContext Result.Failure(error)
+        }
     }
 }
