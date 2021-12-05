@@ -11,6 +11,11 @@ android {
         viewBinding true
     }
 
+    composeOptions {
+        kotlinCompilerVersion "1.5.10"
+        kotlinCompilerExtensionVersion "1.0.0-beta08"
+    }
+
     defaultConfig {
         applicationId "com.ogheapsters.dumstigram"
         minSdk 24
@@ -27,10 +32,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
@@ -49,6 +56,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
 
     // Jetpack Compose
+    implementation 'androidx.compose.compiler:compiler:1.1.0-beta03'
     implementation 'androidx.compose.ui:ui:1.0.5'
     implementation 'androidx.compose.ui:ui-tooling:1.0.5'
     implementation 'androidx.compose.foundation:foundation:1.0.5'
