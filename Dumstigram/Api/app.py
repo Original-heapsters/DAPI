@@ -141,7 +141,6 @@ def isolate_filter(filter_name):
 @app.route('/filters/<filter_name>', methods=['GET'])
 def get_filter_info(filter_name):
     # send file as attachment as api response
-    print(filter_classes[filter_name].get_info())
     return jsonify(filter_classes[filter_name].get_info())
 
 

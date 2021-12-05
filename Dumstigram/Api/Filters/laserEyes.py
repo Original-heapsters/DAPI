@@ -23,7 +23,7 @@ class laserEyes(object):
 
     def filter_image(self, input, coords=None):
         if coords is None:
-            return None
+            return input
 
         laser_chosen = 'laser_' + str(random.randint(1, self.laser_count))
         overlay = cv2.imread(self.additives + '/' + laser_chosen + '.png', -1)
