@@ -72,7 +72,7 @@ class bulge(object):
             # do the remap  this is where the magic happens
             return cv2.remap(original, flex_x, flex_y, cv2.INTER_LINEAR)
 
-        return random.choice([remap_method, image_implode_method])()
+        return random.choice([image_implode_method])()
 
     def identify_prep(self, input):
         grayImage = cv2.cvtColor(input, cv2.COLOR_BGR2GRAY)
@@ -87,6 +87,8 @@ class bulge(object):
         return eyes
 
     def apply_filter(self, input, debug=False):
+        print('Applying filter')
+        print(self.get_info())
         original = cv2.imread(input)
 
         if debug:

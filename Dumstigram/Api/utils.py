@@ -28,8 +28,6 @@ def apply_random_filters(filters, input_img):
         running_img = random.choice(filters).apply_filter(input_img)
     else:
         for k in range(random.randint(0, num_filters - 1)):
-            if not running_img:
-                running_img = random.choice(filters).apply_filter(input_img)
-            else:
-                running_img = random.choice(filters).apply_filter(running_img)
+            img_src = running_img if running_img else input_img
+            running_img = random.choice(filters).apply_filter(img_src)
     return running_img
