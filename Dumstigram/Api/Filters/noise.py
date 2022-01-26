@@ -63,6 +63,8 @@ class noise(object):
         return None
 
     def apply_filter(self, input, debug=False):
+        print('Applying filter')
+        print(self.get_info())
         original = cv2.imread(input)
 
         if debug:

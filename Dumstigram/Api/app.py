@@ -84,20 +84,21 @@ def process_image(filter_name=None):
         file_components = file.filename.rsplit('.', 1)
         name = uuid.uuid4().hex
         filename = secure_filename(name + '.' + file_components[-1])
-        dest_file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(dest_file)
-        app.logger.debug(f'Saving temp file to {dest_file}')
+        input_file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(input_file)
+        app.logger.debug(f'Saving temp file to {input_file}')
 
         if filter_name and filter_classes[filter_name]:
             chosen_filter = filter_classes[filter_name]
-            filtered_img = apply_random_filters([chosen_filter], dest_file)
+            filtered_img = apply_random_filters([chosen_filter], input_file)
         else:
             possible_filters = list(filter_classes.values())
-            filtered_img = apply_random_filters(possible_filters, dest_file)
+            filtered_img = apply_random_filters(possible_filters, input_file)
 
-        # Replace uploaded img with filtered version
-        shutil.move(filtered_img, dest_file)
-        with open(dest_file, 'rb') as f:
+        # Overwrite uploaded img with filtered version
+        if filtered_img is not None:
+            shutil.move(filtered_img, input_file)
+        with open(input_file, 'rb') as f:
             file_bytes = f.read()
             redis_instance.setex(name, app.config['REDIS_TTL'], file_bytes)
             app.logger.debug(f'Saving filtered img bytes to redis key {name}')
