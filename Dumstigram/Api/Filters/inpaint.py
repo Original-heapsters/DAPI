@@ -6,7 +6,7 @@ import numpy as np
 
 
 class inpaint(object):
-    def __init__(self, eye_cascade, smile_cascade, face_cascade):
+    def __init__(self, eye_cascade=None, smile_cascade=None, face_cascade=None):
         self.eye_cascade = eye_cascade
         self.smile_cascade = smile_cascade
         self.face_cascade = face_cascade

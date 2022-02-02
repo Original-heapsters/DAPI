@@ -75,16 +75,10 @@ class bulge(object):
         return random.choice([image_implode_method])()
 
     def identify_prep(self, input):
-        grayImage = cv2.cvtColor(input, cv2.COLOR_BGR2GRAY)
-        return grayImage
+        return None
 
-    # Find eyes
     def identify_features(self, input):
-        prepped_img = self.identify_prep(input)
-        classifier = os.path.join(self.resources, self.identifier)
-        eye_cascade = cv2.CascadeClassifier(classifier)
-        eyes = eye_cascade.detectMultiScale(prepped_img)
-        return eyes
+        return None
 
     def apply_filter(self, input, debug=False):
         print('Applying filter')
