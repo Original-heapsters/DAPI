@@ -11,7 +11,8 @@ from Filters import (laserEyes,
                      brightnessContrast,
                      bulge,
                      inpaint,
-                     sharpen)
+                     sharpen,
+                     swirl)
 from werkzeug.utils import secure_filename
 from flask import (Flask,
                    jsonify,
@@ -48,6 +49,7 @@ def initialize():
         'bulge': bulge.bulge(),
         'inpaint': inpaint.inpaint(eye_cascade, smile_cascade, face_cascade),
         'sharpen': sharpen.sharpen(),
+        'swirl': swirl.swirl(),
         }
 
 

@@ -17,9 +17,8 @@ def identify_features(input):
     return None
 
 
-def apply_filter(self, input, debug=False):
+def apply_filter(input, debug=False):
     print('Applying filter')
-    print(self.get_info())
     original = cv2.imread(input)
 
     if debug:
@@ -35,5 +34,5 @@ def apply_filter(self, input, debug=False):
 
 
 if __name__ == '__main__':
-    originalImg = '../uploads/me.PNG'
+    originalImg = '../uploads/test.png'
     apply_filter(originalImg, debug=True)
