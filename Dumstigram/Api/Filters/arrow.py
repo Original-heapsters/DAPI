@@ -4,7 +4,7 @@ import cv2
 import random
 
 
-class circle(object):
+class arrow(object):
     def __init__(self, eye_cascade=None):
         self.eye_cascade = eye_cascade
         self.detection_mode = 'eyes'
@@ -14,7 +14,7 @@ class circle(object):
     def get_info(self):
         return {
                 'name': __class__.__name__,
-                'description': """Places red cirle around eyes""",
+                'description': """Places red arrows pointing to eyes""",
                 'randomized_aspects': [],
                 'performance_impact': 3,
                 'requires_face': True,
@@ -25,15 +25,17 @@ class circle(object):
             return input
 
         for pts in coords:
-            rect_center = (pts[0] + int(pts[2]/2), pts[1] + int(pts[3]/2))
+            start_point = (pts[0] - pts[2], pts[1] - pts[3])
+            end_point = (pts[0] + int(pts[2]/4), pts[1] + int(pts[3]/4))
             red = (0, 0, 255)
             if random.randint(0, 1) == 0:
-                # 50/50 chance to draw a cirlce for every detected eye
-                cv2.circle(input,
-                           rect_center,
-                           random.randint(1, pts[3]),
-                           red,
-                           random.randint(2, 5))
+                # 50/50 chance to draw an arrow for every detected eye
+                cv2.arrowedLine(input,
+                                start_point,
+                                end_point,
+                                red,
+                                thickness=random.randint(2, 6),
+                                tipLength=random.uniform(0.1, 0.75))
         return input
 
     def identify_prep(self, input):
@@ -79,5 +81,5 @@ if __name__ == '__main__':
                               'haar_eye_tree_glasses.xml')
     eye_cascade = cv2.CascadeClassifier(classifier)
     originalImg = '../uploads/test.png'
-    filterClass = circle(eye_cascade)
+    filterClass = arrow(eye_cascade)
     filterClass.apply_filter(originalImg, debug=True)

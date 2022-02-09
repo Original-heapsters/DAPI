@@ -6,7 +6,8 @@ import uuid
 from utils import (allowed_file,
                    clear_dir,
                    apply_random_filters)
-from Filters import (circle,
+from Filters import (arrow,
+                     circle,
                      laserEyes,
                      noise,
                      brightnessContrast,
@@ -44,6 +45,7 @@ def initialize():
     smile_cascade = cv2.CascadeClassifier(smile_classifier)
     face_cascade = cv2.CascadeClassifier(face_classifier)
     filter_classes = {
+        'arrow': arrow.arrow(eye_cascade),
         'circle': circle.circle(eye_cascade),
         'laserEyes': laserEyes.laserEyes(),
         'noise': noise.noise(),
