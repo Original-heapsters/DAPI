@@ -2,7 +2,7 @@
 
 FROM python:3.8-slim-buster
 RUN apt-get update -y
-RUN apt install -y libglib2.0-0 libsm6 libxext6 libxrender-dev libmagickwand-dev
+RUN apt install -y ffmpeg libglib2.0-0 libsm6 libxext6 libxrender-dev libmagickwand-dev
 
 WORKDIR /app
 
