@@ -5,23 +5,18 @@ import random
 import numpy as np
 
 
-class inpaint(object):
-    def __init__(self,
-                 eye_cascade=None,
-                 smile_cascade=None,
-                 face_cascade=None):
+class circle(object):
+    def __init__(self, eye_cascade=None):
         self.eye_cascade = eye_cascade
-        self.smile_cascade = smile_cascade
-        self.face_cascade = face_cascade
         self.detection_mode = 'eyes'
-        self.laser_count = 5
+        self.circle_count = 5
         self.identifier = 'haar_eye_tree_glasses.xml'
 
     def get_info(self):
         return {
                 'name': __class__.__name__,
-                'description': """Uses inpaint to remove detected eyes""",
-                'randomized_aspects': ['inpaint radius'],
+                'description': """Places red cirle around eyes""",
+                'randomized_aspects': [],
                 'performance_impact': 3,
                 'requires_face': True,
                 }
@@ -30,15 +25,17 @@ class inpaint(object):
         if coords is None or len(coords) == 0:
             return input
 
-        mask = np.zeros(input.shape[:2], dtype='uint8')
-
         for pts in coords:
-            cv2.rectangle(mask, pts, 255, -1)
-        output = cv2.inpaint(input,
-                             mask,
-                             random.uniform(50, 100),
-                             flags=random.choice([cv2.INPAINT_TELEA]))
-        return output
+            rect_center = (pts[0] + int(pts[2]/2), pts[1] + int(pts[3]/2))
+            red = (0, 0, 255)
+            if random.randint(0, 1) == 0:
+                # 50/50 chance to draw a cirlce for every detected eye
+                cv2.circle(input,
+                           rect_center,
+                           random.randint(1, pts[3]),
+                           red,
+                           random.randint(1, 5))
+        return input
 
     def identify_prep(self, input):
         grayImage = cv2.cvtColor(input, cv2.COLOR_BGR2GRAY)
@@ -83,5 +80,5 @@ if __name__ == '__main__':
                               'haar_eye_tree_glasses.xml')
     eye_cascade = cv2.CascadeClassifier(classifier)
     originalImg = '../uploads/test.png'
-    filterClass = inpaint(eye_cascade)
+    filterClass = circle(eye_cascade)
     filterClass.apply_filter(originalImg, debug=True)
