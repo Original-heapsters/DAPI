@@ -8,6 +8,7 @@ from utils import (allowed_file,
                    apply_random_filters)
 from Filters import (arrow,
                      circle,
+                     cryLaughing,
                      laserEyes,
                      noise,
                      brightnessContrast,
@@ -47,6 +48,7 @@ def initialize():
     filter_classes = {
         'arrow': arrow.arrow(eye_cascade),
         'circle': circle.circle(eye_cascade),
+        'cryLaughing': cryLaughing.cryLaughing(),
         'laserEyes': laserEyes.laserEyes(),
         'noise': noise.noise(),
         'brightness': brightnessContrast.brightnessContrast(),
