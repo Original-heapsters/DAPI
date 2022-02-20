@@ -9,6 +9,7 @@ class basic_filter(object):
         self.randomization = []
         self.performance = 1
         self.requires_detection = False
+        self.source_filename = None
         self.debug = debug
 
     def get_info(self):
@@ -30,6 +31,7 @@ class basic_filter(object):
         return temp_path
 
     def apply_filter(self, input):
+        self.source_filename = input
         name = self.get_info()['name']
 
         print('Applying filter {}'.format(name))

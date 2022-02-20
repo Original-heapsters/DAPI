@@ -3,6 +3,7 @@ import cv2
 import redis
 from flask import (Flask)
 from controllers import (black_and_white,
+                         bulge,
                          grayscale,
                          brightness_contrast,
                          noise,
@@ -12,7 +13,6 @@ from Filters import (arrow,
                      circle,
                      emojiOverlay,
                      laserEyes,
-                     bulge,
                      inpaint)
 
 
