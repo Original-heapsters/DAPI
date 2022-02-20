@@ -1,6 +1,6 @@
 from flask import Blueprint, redirect, url_for
 
-display = Blueprint('display', __name__)
+display = Blueprint('display', __name__, static_folder='../static')
 
 
 @display.route('/display/<filename>')
