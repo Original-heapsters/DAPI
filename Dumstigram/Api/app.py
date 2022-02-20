@@ -47,10 +47,10 @@ app = Flask(__name__)
 with app.app_context():
     initialize()
     from views import display, filters, helloWorld, home
-    app.register_blueprint(display.display)
-    app.register_blueprint(filters.filters)
+    app.register_blueprint(display.display, url_prefix='/display')
+    app.register_blueprint(filters.filters, url_prefix='/filters')
     app.register_blueprint(helloWorld.helloWorld)
-    app.register_blueprint(home.home)
+    app.register_blueprint(home.home, url_prefix='/home')
 
 
 if __name__ == '__main__':

@@ -7,12 +7,12 @@ with current_app.app_context():
     home = Blueprint('home', __name__, template_folder='templates')
 
 
-@home.route('/home')
+@home.route('')
 def upload_form():
     return render_template('upload.html')
 
 
-@home.route('/home', methods=['POST'])
+@home.route('', methods=['POST'])
 def upload_file():
     asApi = request.args.get('asApi')
     result = utils.process_image()

@@ -8,7 +8,7 @@ with current_app.app_context():
     filters = Blueprint('filters', __name__)
 
 
-@filters.route('/filters/<filter_name>', methods=['POST'])
+@filters.route('/<filter_name>', methods=['POST'])
 def isolate_filter(filter_name):
     result = utils.process_image(filter_name)
     filename, name = result
@@ -21,12 +21,12 @@ def isolate_filter(filter_name):
     )
 
 
-@filters.route('/filters/<filter_name>', methods=['GET'])
+@filters.route('/<filter_name>', methods=['GET'])
 def get_filter_info(filter_name):
     # send file as attachment as api response
     return jsonify(filter_classes[filter_name].get_info())
 
 
-@filters.route('/filters', methods=['GET'])
+@filters.route('', methods=['GET'])
 def get_filter_names():
     return jsonify(list(filter_classes.keys()))
