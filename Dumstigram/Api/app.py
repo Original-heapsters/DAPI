@@ -2,16 +2,18 @@ import os
 import cv2
 import redis
 from flask import (Flask)
+from controllers import (black_and_white,
+                         bulge,
+                         grayscale,
+                         brightness_contrast,
+                         noise,
+                         sharpen,
+                         swirl)
 from Filters import (arrow,
                      circle,
                      emojiOverlay,
                      laserEyes,
-                     noise,
-                     brightnessContrast,
-                     bulge,
-                     inpaint,
-                     sharpen,
-                     swirl)
+                     inpaint)
 
 
 def initialize():
@@ -34,11 +36,13 @@ def initialize():
         'emojiOverlay': emojiOverlay.emojiOverlay(),
         'laserEyes': laserEyes.laserEyes(),
         'noise': noise.noise(),
-        'brightness': brightnessContrast.brightnessContrast(),
+        'grayscale': grayscale.grayscale(),
+        'brightness': brightness_contrast.brightness_contrast(),
         'bulge': bulge.bulge(),
         'inpaint': inpaint.inpaint(eye_cascade, smile_cascade, face_cascade),
         'sharpen': sharpen.sharpen(),
         'swirl': swirl.swirl(),
+        'black_and_white': black_and_white.black_and_white()
         }
     app.config['FILTER_CLASSES'] = filter_classes
 
