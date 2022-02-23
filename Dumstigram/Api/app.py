@@ -13,7 +13,8 @@ from Filters import (arrow,
                      circle,
                      emojiOverlay,
                      laserEyes,
-                     inpaint)
+                     inpaint,
+                     mustache)
 
 
 def initialize():
@@ -42,7 +43,8 @@ def initialize():
         'inpaint': inpaint.inpaint(eye_cascade, smile_cascade, face_cascade),
         'sharpen': sharpen.sharpen(),
         'swirl': swirl.swirl(),
-        'black_and_white': black_and_white.black_and_white()
+        'black_and_white': black_and_white.black_and_white(),
+        'mustache': mustache.mustache(smile_cascade, face_cascade)
         }
     app.config['FILTER_CLASSES'] = filter_classes
 
