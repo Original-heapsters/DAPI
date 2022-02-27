@@ -1,6 +1,11 @@
 import cv2
 import random
-from models.basic_filter import basic_filter
+if __name__ == '__main__':
+    import sys
+    sys.path.append('../models')
+    from basic_filter import basic_filter
+else:
+    from models.basic_filter import basic_filter
 
 
 class brightness_contrast(basic_filter):

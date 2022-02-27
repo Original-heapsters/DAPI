@@ -1,5 +1,10 @@
 import cv2
-from models.basic_filter import basic_filter
+if __name__ == '__main__':
+    import sys
+    sys.path.append('../models')
+    from basic_filter import basic_filter
+else:
+    from models.basic_filter import basic_filter
 
 
 GRAY_MIDPOINT = 127
@@ -21,6 +26,8 @@ class black_and_white(basic_filter):
 
 
 if __name__ == '__main__':
+    import sys
+    sys.path.append('../models')
     originalImg = '../uploads/test.png'
     filterClass = black_and_white(debug=True)
     filterClass.apply_filter(originalImg)

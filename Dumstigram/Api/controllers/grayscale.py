@@ -1,5 +1,10 @@
 import cv2
-from models.basic_filter import basic_filter
+if __name__ == '__main__':
+    import sys
+    sys.path.append('../models')
+    from basic_filter import basic_filter
+else:
+    from models.basic_filter import basic_filter
 
 
 class grayscale(basic_filter):

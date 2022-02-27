@@ -1,7 +1,12 @@
 import cv2
 import random
 import numpy as np
-from models.basic_filter import basic_filter
+if __name__ == '__main__':
+    import sys
+    sys.path.append('../models')
+    from basic_filter import basic_filter
+else:
+    from models.basic_filter import basic_filter
 
 
 class swirl(basic_filter):

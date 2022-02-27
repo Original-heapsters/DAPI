@@ -76,12 +76,12 @@ class mustache(object):
         faces = self.face_cascade.detectMultiScale(prepped_img, 1.3, 5)
         print('faces are')
         print(faces)
+        coords = []
         for (x, y, w, h) in faces:
             # cv2.rectangle(input, (x, y), ((x + w), (y + h)), (255, 0, 0), 2)
             roi_gray = prepped_img[y:y + h, x:x + w]
             input = input[y:y + h, x:x + w]
             smiles = self.mouth_cascade.detectMultiScale(roi_gray, 1.8, 20)
-            coords = []
             for (sx, sy, sw, sh) in smiles:
                 # cv2.rectangle(input, (sx, sy), ((sx + sw), (sy + sh)), (0, 0, 255), 2)
                 coords.append([sx+x, sy+y, sw, sh])

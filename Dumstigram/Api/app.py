@@ -2,19 +2,18 @@ import os
 import cv2
 import redis
 from flask import (Flask)
-from controllers import (black_and_white,
-                         bulge,
-                         grayscale,
+from controllers import (arrow,
+                         black_and_white,
                          brightness_contrast,
+                         bulge,
+                         circle,
+                         emoji_overlay,
+                         grayscale,
+                         inpaint,
                          noise,
                          sharpen,
                          swirl)
-from Filters import (arrow,
-                     circle,
-                     emojiOverlay,
-                     laserEyes,
-                     inpaint,
-                     mustache)
+from Filters import (laserEyes)  # mustache)
 
 
 def initialize():
@@ -32,19 +31,36 @@ def initialize():
     smile_cascade = cv2.CascadeClassifier(smile_classifier)
     face_cascade = cv2.CascadeClassifier(face_classifier)
     filter_classes = {
-        'arrow': arrow.arrow(eye_cascade),
-        'circle': circle.circle(eye_cascade),
-        'emojiOverlay': emojiOverlay.emojiOverlay(),
-        'laserEyes': laserEyes.laserEyes(),
-        'noise': noise.noise(),
-        'grayscale': grayscale.grayscale(),
+        'arrow': arrow.arrow(eye_cascade,
+                             smile_cascade,
+                             face_cascade,
+                             'eyes'),
+        'arrow_face': arrow.arrow(eye_cascade,
+                                  smile_cascade,
+                                  face_cascade,
+                                  'face'),
+        'black_and_white': black_and_white.black_and_white(),
         'brightness': brightness_contrast.brightness_contrast(),
         'bulge': bulge.bulge(),
-        'inpaint': inpaint.inpaint(eye_cascade, smile_cascade, face_cascade),
+        'circle': circle.circle(eye_cascade,
+                                smile_cascade,
+                                face_cascade,
+                                'eyes'),
+        'circle_smile': circle.circle(eye_cascade,
+                                      smile_cascade,
+                                      face_cascade,
+                                      'smile'),
+        'emoji_overlay': emoji_overlay.emoji_overlay(),
+        'grayscale': grayscale.grayscale(),
+        'inpaint': inpaint.inpaint(eye_cascade,
+                                   smile_cascade,
+                                   face_cascade,
+                                   'eyes'),
+        'laserEyes': laserEyes.laserEyes(),
+        # 'mustache': mustache.mustache(smile_cascade, face_cascade),
+        'noise': noise.noise(),
         'sharpen': sharpen.sharpen(),
-        'swirl': swirl.swirl(),
-        'black_and_white': black_and_white.black_and_white(),
-        'mustache': mustache.mustache(smile_cascade, face_cascade)
+        'swirl': swirl.swirl()
         }
     app.config['FILTER_CLASSES'] = filter_classes
 

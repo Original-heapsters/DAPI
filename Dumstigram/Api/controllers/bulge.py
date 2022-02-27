@@ -3,7 +3,12 @@ import math
 import random
 import numpy as np
 from wand.image import Image, PIXEL_INTERPOLATE_METHODS
-from models.basic_filter import basic_filter
+if __name__ == '__main__':
+    import sys
+    sys.path.append('../models')
+    from basic_filter import basic_filter
+else:
+    from models.basic_filter import basic_filter
 
 
 class bulge(basic_filter):
