@@ -35,6 +35,28 @@ class face_overlay_filter(basic_filter):
                 'debug_mode': self.debug,
                 }
 
+    def resize_overlay(self, dest_width, overlay):
+        ratio = dest_width / overlay.shape[1]
+        dimension = (dest_width, int(overlay.shape[0] * ratio))
+        return cv2.resize(overlay, dimension, interpolation=cv2.INTER_AREA)
+
+    def calc_position(self, x, y, overlay):
+        # Define bounding diagonal points for overlay
+        y1, y2 = y, y + overlay.shape[0]
+        x1, x2 = x, x + overlay.shape[1]
+        return x1, y1, x2, y2
+
+    def overlay_with_alpha(self, x1, y1, x2, y2, overlay, background):
+        alpha_over = overlay[:, :, 3] / 255.0
+        alpha_bg = 1.0 - alpha_over
+
+        for c in range(0, 3):
+            background[y1:y2, x1:x2, c] = (alpha_over * overlay[:, :, c] +
+                                           alpha_bg * background[y1:y2,
+                                           x1:x2,
+                                           c])
+        return background
+
     def filter_image(self, input, coords=None):
         return input
 

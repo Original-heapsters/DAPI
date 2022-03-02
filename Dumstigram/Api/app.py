@@ -10,10 +10,11 @@ from controllers import (arrow,
                          emoji_overlay,
                          grayscale,
                          inpaint,
+                         laser_eyes,
+                         mustache,
                          noise,
                          sharpen,
                          swirl)
-from Filters import (laserEyes)  # mustache)
 
 
 def initialize():
@@ -56,8 +57,14 @@ def initialize():
                                    smile_cascade,
                                    face_cascade,
                                    'eyes'),
-        'laserEyes': laserEyes.laserEyes(),
-        # 'mustache': mustache.mustache(smile_cascade, face_cascade),
+        'laser_eyes': laser_eyes.laser_eyes(eye_cascade,
+                                            smile_cascade,
+                                            face_cascade,
+                                            'eyes'),
+        'mustache': mustache.mustache(eye_cascade,
+                                      smile_cascade,
+                                      face_cascade,
+                                      'smile'),
         'noise': noise.noise(),
         'sharpen': sharpen.sharpen(),
         'swirl': swirl.swirl()
