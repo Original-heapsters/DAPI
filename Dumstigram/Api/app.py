@@ -22,11 +22,11 @@ def initialize():
     redis_url = os.environ.get('REDIS_URL') or app.config['REDIS_URL']
     redis_instance = redis.Redis.from_url(redis_url)
     app.config['REDIS'] = redis_instance
-    eye_classifier = os.path.join('./Filters/resources',
+    eye_classifier = os.path.join('./controllers/resources',
                                   app.config['EYE_CLASSIFIER'])
-    smile_classifier = os.path.join('./Filters/resources',
+    smile_classifier = os.path.join('./controllers/resources',
                                     app.config['SMILE_CLASSIFIER'])
-    face_classifier = os.path.join('./Filters/resources',
+    face_classifier = os.path.join('./controllers/resources',
                                    app.config['FACE_CLASSIFIER'])
     eye_cascade = cv2.CascadeClassifier(eye_classifier)
     smile_cascade = cv2.CascadeClassifier(smile_classifier)
