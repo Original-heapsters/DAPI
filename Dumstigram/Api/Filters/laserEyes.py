@@ -52,8 +52,11 @@ class laserEyes(object):
             return background
 
         for (x, y, w, h) in coords:
-            resized = resize_overlay(w, overlay)
-            x1, y1, x2, y2 = calc_position(x, y, resized)
+            adjustedX = x - int(w/2)
+            adjustedY = y - int(h/2)
+            adjustedW = w * 2
+            resized = resize_overlay(adjustedW, overlay)
+            x1, y1, x2, y2 = calc_position(adjustedX, adjustedY, resized)
             input = overlay_with_alpha(x1, y1, x2, y2, resized, input)
         return input
 
@@ -90,5 +93,7 @@ class laserEyes(object):
 
 if __name__ == '__main__':
     originalImg = '../uploads/test.png'
+    # originalImg = '../uploads/smileMan.jpg'
+    # originalImg = '../uploads/smileLady.jpg'
     filterClass = laserEyes()
     filterClass.apply_filter(originalImg, debug=True)
