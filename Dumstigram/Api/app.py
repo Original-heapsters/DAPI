@@ -10,10 +10,11 @@ from controllers import (arrow,
                          emoji_overlay,
                          grayscale,
                          inpaint,
+                         laser_eyes,
+                         mustache,
                          noise,
                          sharpen,
                          swirl)
-from Filters import (laserEyes)  # mustache)
 
 
 def initialize():
@@ -21,11 +22,11 @@ def initialize():
     redis_url = os.environ.get('REDIS_URL') or app.config['REDIS_URL']
     redis_instance = redis.Redis.from_url(redis_url)
     app.config['REDIS'] = redis_instance
-    eye_classifier = os.path.join('./Filters/resources',
+    eye_classifier = os.path.join('./controllers/resources',
                                   app.config['EYE_CLASSIFIER'])
-    smile_classifier = os.path.join('./Filters/resources',
+    smile_classifier = os.path.join('./controllers/resources',
                                     app.config['SMILE_CLASSIFIER'])
-    face_classifier = os.path.join('./Filters/resources',
+    face_classifier = os.path.join('./controllers/resources',
                                    app.config['FACE_CLASSIFIER'])
     eye_cascade = cv2.CascadeClassifier(eye_classifier)
     smile_cascade = cv2.CascadeClassifier(smile_classifier)
@@ -56,8 +57,14 @@ def initialize():
                                    smile_cascade,
                                    face_cascade,
                                    'eyes'),
-        'laserEyes': laserEyes.laserEyes(),
-        # 'mustache': mustache.mustache(smile_cascade, face_cascade),
+        'laser_eyes': laser_eyes.laser_eyes(eye_cascade,
+                                            smile_cascade,
+                                            face_cascade,
+                                            'eyes'),
+        'mustache': mustache.mustache(eye_cascade,
+                                      smile_cascade,
+                                      face_cascade,
+                                      'smile'),
         'noise': noise.noise(),
         'sharpen': sharpen.sharpen(),
         'swirl': swirl.swirl()
