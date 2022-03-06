@@ -28,7 +28,13 @@ class inpaint(face_filter):
         mask = np.zeros(input.shape[:2], dtype='uint8')
 
         for pts in coords:
-            cv2.rectangle(mask, pts, 255, -1)
+            adj_w = int(pts[2] / 2)
+            adj_h = int(pts[3] / 2)
+            adj_x = int(pts[0] + adj_w/2)
+            adj_y = int(pts[1] + adj_h/2)
+            # Reducing size of detected rectangle for performance reasons
+            smaller_pts = [adj_x, adj_y, adj_w, adj_h]
+            cv2.rectangle(mask, smaller_pts, 255, -1)
         output = cv2.inpaint(input,
                              mask,
                              random.uniform(50, 100),
