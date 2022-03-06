@@ -11,8 +11,5 @@ def liveness():
 
 
 def readiness():
-    print('test ready')
-    with current_app.app_context():
-        redis = current_app.config['REDIS']
     if not redis.ping():
         raise HealthError("Can't connect to the redis instance")
