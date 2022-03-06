@@ -43,7 +43,7 @@ class overlay_filter(basic_filter):
         return background
 
     def filter_image(self, input):
-        return input
+        raise NotImplementedError
 
     def write_temp_file(self, input):
         tfile, temp_path = tempfile.mkstemp(".png")

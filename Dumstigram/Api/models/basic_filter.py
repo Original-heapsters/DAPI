@@ -23,7 +23,7 @@ class basic_filter(object):
                 }
 
     def filter_image(self, input):
-        return input
+        raise NotImplementedError
 
     def write_temp_file(self, input):
         tfile, temp_path = tempfile.mkstemp(".png")
