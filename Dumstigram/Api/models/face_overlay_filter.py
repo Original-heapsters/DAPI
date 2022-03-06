@@ -58,7 +58,7 @@ class face_overlay_filter(basic_filter):
         return background
 
     def filter_image(self, input, coords=None):
-        return input
+        raise NotImplementedError
 
     def identify_prep(self, input):
         grayImage = cv2.cvtColor(input, cv2.COLOR_BGR2GRAY)
