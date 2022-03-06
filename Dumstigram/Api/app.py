@@ -3,7 +3,8 @@ import cv2
 import redis
 from flask import (Flask)
 from flask_healthz import healthz
-from controllers import (arrow,
+from controllers import (add_text,
+                         arrow,
                          black_and_white,
                          brightness_contrast,
                          bulge,
@@ -33,6 +34,8 @@ def initialize():
     smile_cascade = cv2.CascadeClassifier(smile_classifier)
     face_cascade = cv2.CascadeClassifier(face_classifier)
     filter_classes = {
+        'top_text': add_text.add_text(is_top_text=True),
+        'bottom_text': add_text.add_text(is_top_text=False),
         'arrow': arrow.arrow(eye_cascade,
                              smile_cascade,
                              face_cascade,
