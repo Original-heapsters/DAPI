@@ -1,7 +1,10 @@
 *.production_settings
 **/static/uploads/*
 **/uploads/*
-!**/uploads/test.png
+**/jmeter/*
+!**/jmeter/*.jmx
+!**/jmeter/*.csv
+!/bin/log4j2.xml
 
 ############# AUTO GENERATED #############
 
