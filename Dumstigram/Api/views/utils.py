@@ -37,7 +37,7 @@ def apply_random_filters(filters, input_img):
     if num_filters == 1:
         running_img = random.choice(filters).apply_filter(input_img)
     else:
-        for k in range(random.randint(0, num_filters - 1)):
+        for k in range(random.randint(1, num_filters - 1)):
             img_src = running_img if running_img else input_img
             running_img = random.choice(filters).apply_filter(img_src)
     return running_img
