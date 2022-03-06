@@ -2,6 +2,7 @@ import os
 import cv2
 import redis
 from flask import (Flask)
+from flask_healthz import healthz
 from controllers import (arrow,
                          black_and_white,
                          brightness_contrast,
@@ -75,7 +76,12 @@ def initialize():
 app = Flask(__name__)
 with app.app_context():
     initialize()
-    from views import display, filters, helloWorld, home
+    from views import healthCheck, display, filters, helloWorld, home
+    app.config['HEALTHZ'] = {
+        "live": healthCheck.liveness,
+        "ready": healthCheck.readiness,
+    }
+    app.register_blueprint(healthz, url_prefix="/healthz")
     app.register_blueprint(display.display, url_prefix='/display')
     app.register_blueprint(filters.filters, url_prefix='/filters')
     app.register_blueprint(helloWorld.helloWorld)
