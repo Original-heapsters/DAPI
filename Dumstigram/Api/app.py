@@ -17,8 +17,6 @@ from controllers import (arrow,
                          sharpen,
                          swirl)
 
-redis_instance = None
-
 
 def initialize():
     app.config.from_pyfile('default.default_settings')
