@@ -26,16 +26,18 @@ class Airfry(object):
         print(f'Logged in as {bot.user} (ID: {bot.user.id})')
         print('------')
 
-    @bot.command(description='Check if bot is alive')
+    @bot.command(brief='Check if bot is alive',
+                 description='Check if bot is alive')
     async def ping(ctx):
         await ctx.send('pong')
 
-    @bot.command(description='Get beans')
+    @bot.command(brief='Get beans', description='Get beans')
     async def swaggy(ctx):
         await ctx.send('beans')
 
-    @bot.command(description='''
-    Deep fry an attached image
+    @bot.command(brief='Air fry an attached image',
+                 description='''
+    Air fry an attached image
     If no filterId supplied, random filters will be applied
     If a specific filterId is passed in, only that one will be used
     Possible filters:
