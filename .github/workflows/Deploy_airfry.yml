@@ -21,5 +21,5 @@ jobs:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: ${{ secrets.HEROKU_APP_NAME_DISCORD }}
           dockerfile_directory: ./Dumstigram
-          dockerfile_name: Infra/Dockerfile_discord.web
-          process_type: web
+          dockerfile_name: Infra/Dockerfile_discord.worker
+          process_type: worker
