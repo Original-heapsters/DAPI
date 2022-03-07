@@ -26,15 +26,37 @@ class Airfry(object):
         print(f'Logged in as {bot.user} (ID: {bot.user.id})')
         print('------')
 
-    @bot.command()
+    @bot.command(description='Check if bot is alive')
     async def ping(ctx):
         await ctx.send('pong')
 
-    @bot.command()
+    @bot.command(description='Get beans')
     async def swaggy(ctx):
         await ctx.send('beans')
 
-    @bot.command()
+    @bot.command(description='''
+    Deep fry an attached image
+    If no filterId supplied, random filters will be applied
+    If a specific filterId is passed in, only that one will be used
+    Possible filters:
+      - top_text
+      - bottom_text
+      - arrow
+      - arrow_face
+      - black_and_white
+      - brightness
+      - bulge
+      - circle
+      - circle_smile
+      - emoji_overlay
+      - grayscale
+      - inpaint
+      - laser_eyes
+      - mustache
+      - noise
+      - sharpen
+      - swirl
+    ''')
     async def fry(ctx, filter_id=None):
         attachment_url = ctx.message.attachments[0].url
         # file_request = requests.get(attachment_url)
