@@ -1,0 +1,20 @@
+# syntax=docker/dockerfile:1
+
+FROM python:3.8-slim-buster
+RUN apt-get update -y
+RUN apt install -y ffmpeg libglib2.0-0 libsm6 libxext6 libxrender-dev libmagickwand-dev
+
+WORKDIR /app
+
+COPY ./Discord/requirements.txt requirements.txt
+
+RUN pip3 install -r requirements.txt
+
+COPY ./Discord .
+
+EXPOSE $PORT
+EXPOSE $REDIS_URL
+EXPOSE $TOKEN
+EXPOSE $SERVER
+
+CMD [ "python3", "bot_main.py"]
