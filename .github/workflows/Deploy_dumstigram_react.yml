@@ -12,7 +12,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Install packages
-        run: |
-        npm install
-        npm run deploy
+        uses: actions/setup-node@v2
+          with:
+            node-version: '17'
+
+        run: npm install
+        run: npm run deploy
