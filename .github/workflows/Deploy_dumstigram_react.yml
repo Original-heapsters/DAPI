@@ -1,0 +1,20 @@
+name: Deploy dumstigram react app to gh pages.
+
+on:
+  push:
+    branches: [master, testingCI]
+    paths:
+      - 'Dumstigram/React/*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install packages
+        run: npm install
+
+      - name: Deploy to gh pages
+        run: npm run deploy
