@@ -13,8 +13,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install packages
-        run: |
-        npm install
+        run: npm install
       - name: Deploy to gh pages
-        run: |
-        npm run deploy
+        run: npm run deploy
