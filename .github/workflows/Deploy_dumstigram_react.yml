@@ -4,17 +4,17 @@ on:
   push:
     branches: [master, testingCI]
     paths:
-      - 'Dumstigram/React/*'
+      - Dumstigram/React/**
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
         with:
-          node-version: '17'
-
-        run: npm install
-        run: npm run deploy
+          node-version: '14'
+          cache: 'npm'
+      - run: npm install
+      - run: npm run deploy
