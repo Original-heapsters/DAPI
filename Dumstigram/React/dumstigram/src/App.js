@@ -19,7 +19,7 @@ function App() {
           post: {
             username: recent,
             avatarUrl: 'https://image-cdn.hypb.st/https%3A%2F%2Fhypebeast.com%2Fimage%2F2020%2F06%2Fcolumbus-ohio-renamed-to-flavortown-petition-guy-fieri-tw.jpg?w=960&cbr=1&q=90&fit=max',
-            caption: 'Toooasttyyyyy flavortowntdt',
+            caption: 'Toooasttyyyyy flavortowntddt',
             imgUrl: srcValue,
           }
         };
