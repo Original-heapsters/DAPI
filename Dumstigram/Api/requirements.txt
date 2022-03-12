@@ -6,6 +6,7 @@ click==7.1.2
 colorama==0.4.3
 flake8==4.0.1
 Flask==1.1.2
+Flask-Cors==3.0.10
 flask-healthz==0.0.3
 idna==3.3
 iniconfig==1.0.1
@@ -14,7 +15,7 @@ Jinja2==2.11.3
 MarkupSafe==1.1.1
 mccabe==0.6.1
 more-itertools==8.4.0
-numpy==1.21.0
+numpy==1.19.1
 opencv-python==4.5.5.62
 packaging==20.4
 pluggy==0.13.1
