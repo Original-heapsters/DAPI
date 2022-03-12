@@ -6,6 +6,10 @@ on:
     paths:
       - Dumstigram/React/**
 
+defaults:
+ run:
+  working-directory: ./Dumstigram/React/dumstigram
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,6 +20,5 @@ jobs:
         with:
           node-version: '14'
       - name: Install dependencies
-        working-directory: ./Dumstigram/React
         run: npm install
       - run: npm run deploy
