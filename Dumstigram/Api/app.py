@@ -2,6 +2,7 @@ import os
 import cv2
 import redis
 from flask import (Flask)
+from flask_cors import CORS
 from flask_healthz import healthz
 from controllers import (add_text,
                          arrow,
@@ -77,9 +78,10 @@ def initialize():
 
 
 app = Flask(__name__)
+CORS(app)
 with app.app_context():
     initialize()
-    from views import healthCheck, display, filters, helloWorld, home
+    from views import healthCheck, display, filters, helloWorld, home, recent
     app.config['HEALTHZ'] = {
         "live": healthCheck.liveness,
         "ready": healthCheck.readiness,
@@ -89,6 +91,7 @@ with app.app_context():
     app.register_blueprint(filters.filters, url_prefix='/filters')
     app.register_blueprint(helloWorld.helloWorld)
     app.register_blueprint(home.home, url_prefix='/home')
+    app.register_blueprint(recent.recent, url_prefix='/recent')
 
 
 if __name__ == '__main__':

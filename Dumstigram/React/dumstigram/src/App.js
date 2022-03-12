@@ -4,49 +4,30 @@ import './App.css';
 import Post from './Post.js';
 
 function App() {
-  const [posts, setPosts] = useState([
-    {
-      id: '123',
-      username: 'test1',
-      avatarUrl: 'https://i.redd.it/b67mzvcj3fl81.jpg',
-      caption: 'nice1',
-      imgUrl: 'https://preview.redd.it/307v6axqh3l81.jpg?width=640&crop=smart&auto=webp&s=b01c842f82a0ad6cde6b24e19b26d8c8281aaa79',
-    },
-    {
-      id: 'abc',
-      username: 'test2',
-      avatarUrl: 'https://preview.redd.it/307v6axqh3l81.jpg?width=640&crop=smart&auto=webp&s=b01c842f82a0ad6cde6b24e19b26d8c8281aaa79',
-      caption: 'nice2',
-      imgUrl: 'https://i.redd.it/b67mzvcj3fl81.jpg',
-    },
-  ]);
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    console.log('ran useEffect');
-    // Get posts from backend
-    // postsResp = getPosts();
     axios({
-        url: 'https://i.redd.it/j6a5ve7jtxl81.jpg', //your url
+        url: `${process.env.REACT_APP_BACKEND_SERVER}/recent/5`,
         method: 'GET',
-        responseType: 'blob', // important
+        headers: {}
     }).then((response) => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        console.log(url);
-        const postsResp = [
-          {
-            id: 'abc',
-            post: {
-              username: 'testaxios',
-              avatarUrl: 'https://preview.redd.it/307v6axqh3l81.jpg?width=640&crop=smart&auto=webp&s=b01c842f82a0ad6cde6b24e19b26d8c8281aaa79',
-              caption: 'niceaxios',
-              imgUrl: url,
-            }
+      const recentPosts = Object.keys(response.data).map((recent) => {
+        const srcValue = "data:image/png;base64," + response.data[recent].split('\'')[1];
+        return {
+          id: recent,
+          post: {
+            username: recent,
+            avatarUrl: 'https://image-cdn.hypb.st/https%3A%2F%2Fhypebeast.com%2Fimage%2F2020%2F06%2Fcolumbus-ohio-renamed-to-flavortown-petition-guy-fieri-tw.jpg?w=960&cbr=1&q=90&fit=max',
+            caption: 'Toooasttyyyyy',
+            imgUrl: srcValue,
           }
-        ];
-        setPosts(postsResp.map( resp => ({
-          id: resp.id,
-          post: resp.post,
-        })));
+        };
+      });
+      setPosts(recentPosts.map( resp => ({
+        key: resp.id,
+        post: resp.post,
+      })));
     });
   }, []);
 
@@ -59,18 +40,18 @@ function App() {
           alt=""
         />
       </div>
-      {
-        posts.map((id, post) => {
-          return <Post username={post.username} avatarUrl={post.avatarUrl} imgUrl={post.imgUrl} caption={post.caption} />
-        })
-      }
-      {/* HEADER */}
-      {/* POST */}
-      {/* POST */}
-      {/* POST */}
-      {/* POST */}
-      {/* POST */}
-      {/* POST */}
+      <div className="app__posts">
+        <div className="app__postsLeft">
+          {
+            posts.map(({key, post}) => {
+              return <Post key={key} username={post.username} avatarUrl={post.avatarUrl} imgUrl={post.imgUrl} caption={post.caption} />
+            })
+          }
+        </div>
+        <div className="app__postsright">
+
+        </div>
+      </div>
     </div>
   );
 }
