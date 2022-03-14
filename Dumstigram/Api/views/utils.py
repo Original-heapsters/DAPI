@@ -99,8 +99,11 @@ def process_image(filter_name=None):
     clear_dir(uploads)
 
     if 'file_url' in request.args:
+        print('file_url is {}'.format(request.args))
         return use_file_url(filter_name)
     elif 'file' in request.files:
+        print('file is {}'.format(request.files))
         return use_given_file(filter_name)
     else:
+        print('ERROR')
         return 'No file was uploaded or no url was provided'
