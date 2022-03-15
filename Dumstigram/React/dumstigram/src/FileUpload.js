@@ -1,9 +1,12 @@
+import './FileUpload.css'
+import { Grid } from  'react-loader-spinner'
 import axios from 'axios';
 import React, { useState } from 'react';
 
 function FileUploadPage(){
   const [selectedFile, setSelectedFile] = useState();
 	const [isFilePicked, setIsFilePicked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const changeHandler = (event) => {
 		setSelectedFile(event.target.files[0]);
@@ -11,6 +14,7 @@ function FileUploadPage(){
 	};
 
   const handleSubmission = () => {
+    setIsLoading(true);
     const formData = new FormData();
 
     formData.append('file', selectedFile);
@@ -22,18 +26,31 @@ function FileUploadPage(){
         method: 'POST',
         headers: { "Content-Type": "multipart/form-data" },
     })
-      .then((response) => window.location.reload(false))
+      .then((response) => {
+        setIsLoading(false);
+        window.location.reload(false);
+      })
       .catch((error) => {
+        setIsLoading(false);
         console.error('Error:', error);
       });
   };
 
 	return(
-   <div>
-			<input type="file" name="file" onChange={changeHandler} />
-			<div>
-				<button onClick={handleSubmission}>Submit</button>
-			</div>
+   <div className='fileUpload'>
+    { isLoading
+      ? <div  className='fileUpload__spinner'><Grid color="#00BFFF" height={50} width={50} /></div>
+      : <div>
+          <img className='fileUpload__icon' src={process.env.PUBLIC_URL + '/upload.png'} alt='upload'/>
+          <div className='fileUpload__form'>
+            <input type="file" name="file" onChange={changeHandler} />
+            <div>
+                <button onClick={handleSubmission}>Submit</button>
+            </div>
+          </div>
+        </div>
+    }
+
 		</div>
 	)
 }
