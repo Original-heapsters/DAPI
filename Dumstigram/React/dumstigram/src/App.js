@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Rings } from  'react-loader-spinner'
 import './App.css';
 import Post from './Post.js';
 import Header from './Header.js';
@@ -7,8 +8,10 @@ import Header from './Header.js';
 
 function App() {
   const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState([false]);
 
   useEffect(() => {
+    setIsLoading(true);
     axios({
         url: `${process.env.REACT_APP_BACKEND_SERVER}/recent/5`,
         method: 'GET',
@@ -29,7 +32,19 @@ function App() {
       setPosts(recentPosts.map( resp => ({
         key: resp.id,
         post: resp.post,
-      })));
+      })).sort((l, r) => {
+        const lExpir = parseInt(l.key.substr(0, l.key.indexOf('-')));
+        const rExpir = parseInt(r.key.substr(0, r.key.indexOf('-')));
+        console.log(`lExpir is ${lExpir}`);
+        console.log(`rExpir is ${rExpir}`);
+        return rExpir - lExpir;
+
+      }));
+      setIsLoading(false);
+    })
+    .catch((error) => {
+      console.log(error);
+      setIsLoading(false);
     });
   }, []);
 
@@ -37,13 +52,17 @@ function App() {
     <div className="app">
       <Header />
       <div className="app__posts">
-        <div className="app__postsLeft">
-          {
-            posts.map(({key, post}) => {
-              return <Post key={key} username={post.username} avatarUrl={post.avatarUrl} imgUrl={post.imgUrl} caption={post.caption} />
-            })
-          }
-        </div>
+        { isLoading
+          ?<Rings color="#00BFFF" height={50} width={50} />
+          :<div className="app__postsLeft">
+            {
+              posts.map(({key, post}) => {
+                return <Post key={key} username={post.username} avatarUrl={post.avatarUrl} imgUrl={post.imgUrl} caption={post.caption} />
+              })
+            }
+          </div>
+        }
+
         <div className="app__postsright">
 
         </div>
