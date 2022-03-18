@@ -96,7 +96,7 @@ with app.app_context():
 
 if __name__ == '__main__':
     app_port = os.environ.get('PORT') or app.config['PORT']
-    app.logger.info(f'Launching at {app.config["HOST"]}:{app_port}')
+    app.logger.info(f'Launching at url {app.config["HOST"]}:{app_port}')
     app.run(debug=app.config['DEBUG'],
             port=app_port,
             host=app.config['HOST'])
