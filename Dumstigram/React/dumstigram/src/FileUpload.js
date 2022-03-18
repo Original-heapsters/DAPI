@@ -3,7 +3,7 @@ import { Grid } from  'react-loader-spinner'
 import axios from 'axios';
 import React, { useState } from 'react';
 
-function FileUploadPage(){
+function FileUploadPage({overlayClick}){
   const [selectedFile, setSelectedFile] = useState();
 	const [isFilePicked, setIsFilePicked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -41,7 +41,7 @@ function FileUploadPage(){
     { isLoading
       ? <div  className='fileUpload__spinner'><Grid color="#00BFFF" height={50} width={50} /></div>
       : <div>
-          <img className='fileUpload__icon' src={process.env.PUBLIC_URL + '/upload.png'} alt='upload'/>
+          <input type='image' className='fileUpload__icon' src={process.env.PUBLIC_URL + '/upload.png'} onClick={overlayClick}/>
           <div className='fileUpload__form'>
             <input type="file" name="file" onChange={changeHandler} />
             <div>

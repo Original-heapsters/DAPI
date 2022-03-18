@@ -30,12 +30,18 @@ class basic_filter(object):
         cv2.imwrite(temp_path, input)
         return temp_path
 
+    def resize_max_width(self, input_file, max_width=500):
+        input = cv2.imread(input_file)
+        ratio = max_width / input.shape[1]
+        dimension = (max_width, int(input.shape[0] * ratio))
+        return cv2.resize(input, dimension, interpolation=cv2.INTER_AREA)
+
     def apply_filter(self, input):
         self.source_filename = input
         name = self.get_info()['name']
 
         print('Applying filter {}'.format(name))
-        original = cv2.imread(input)
+        original = self.resize_max_width(input)
         filtered = self.filter_image(original)
         finished_image = filtered if filtered is not None else original
 

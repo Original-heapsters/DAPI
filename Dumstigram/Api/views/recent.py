@@ -12,8 +12,8 @@ with current_app.app_context():
 def get_recent_frys(num_recent):
     clear_dir(recent_folder, 20)
     return_obj = {}
-    keys_to_fetch = int(num_recent)
-    recent_keys = redis.scan_iter('*', count=keys_to_fetch)
+    # keys_to_fetch = int(num_recent)
+    recent_keys = redis.scan_iter('*')
     for byte_key in recent_keys:
         r_key = byte_key.decode('utf-8')
         expiration = str(redis.ttl(r_key))
