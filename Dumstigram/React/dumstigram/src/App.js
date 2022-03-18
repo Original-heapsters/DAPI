@@ -4,7 +4,6 @@ import { Rings } from  'react-loader-spinner'
 import './App.css';
 import Post from './Post.js';
 import Header from './Header.js';
-// import uploadIcon from '/uploadIcon.svg';
 
 function App() {
   const [posts, setPosts] = useState([]);
@@ -18,14 +17,14 @@ function App() {
         headers: {}
     }).then((response) => {
       const recentPosts = Object.keys(response.data).map((recent) => {
-        const srcValue = "data:image/png;base64," + response.data[recent].split('\'')[1];
+        const srcVal = `${process.env.REACT_APP_BACKEND_SERVER}${response.data[recent].substr(1)}`
         return {
           id: recent,
           post: {
             username: recent,
             avatarUrl: 'https://image-cdn.hypb.st/https%3A%2F%2Fhypebeast.com%2Fimage%2F2020%2F06%2Fcolumbus-ohio-renamed-to-flavortown-petition-guy-fieri-tw.jpg?w=960&cbr=1&q=90&fit=max',
             caption: 'Toooasttyyyyy',
-            imgUrl: srcValue,
+            imgUrl: srcVal,
           }
         };
       });
@@ -35,8 +34,6 @@ function App() {
       })).sort((l, r) => {
         const lExpir = parseInt(l.key.substr(0, l.key.indexOf('-')));
         const rExpir = parseInt(r.key.substr(0, r.key.indexOf('-')));
-        console.log(`lExpir is ${lExpir}`);
-        console.log(`rExpir is ${rExpir}`);
         return rExpir - lExpir;
 
       }));
@@ -62,9 +59,7 @@ function App() {
             }
           </div>
         }
-
         <div className="app__postsright">
-
         </div>
       </div>
     </div>
