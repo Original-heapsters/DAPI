@@ -72,7 +72,7 @@ class face_filter(basic_filter):
     def apply_filter(self, input):
         print('Applying filter')
         print(self.get_info())
-        original = cv2.imread(input)
+        original = self.resize_max_width(input)
 
         if self.debug:
             cv2.imshow('Original', original)

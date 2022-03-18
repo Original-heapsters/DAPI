@@ -54,7 +54,7 @@ class overlay_filter(basic_filter):
         name = self.get_info()['name']
 
         print('Applying filter {}'.format(name))
-        original = cv2.imread(input)
+        original = self.resize_max_width(input)
         filtered = self.filter_image(original)
         finished_image = filtered if filtered is not None else original
 

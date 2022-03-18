@@ -4,6 +4,7 @@ import { Rings } from  'react-loader-spinner'
 import './App.css';
 import Post from './Post.js';
 import Header from './Header.js';
+import CreatePostOverlay from './CreatePostOverlay.js'
 
 function App() {
   const [posts, setPosts] = useState([]);
@@ -45,9 +46,17 @@ function App() {
     });
   }, []);
 
+  const [isCreatingPost, setIsCreatingPost] = useState([false])
+
+	const handleOverlayClick = () => {
+		console.log('clicked the thing')
+		setIsCreatingPost(!isCreatingPost)
+	}
+
   return (
     <div className="app">
-      <Header />
+      <CreatePostOverlay creatingPost={isCreatingPost} overlayClick={handleOverlayClick}/>
+      <Header overlayClick={handleOverlayClick}/>
       <div className="app__posts">
         { isLoading
           ?<Rings color="#00BFFF" height={50} width={50} />
