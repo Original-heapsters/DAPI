@@ -20,10 +20,10 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def clear_dir(folder_path):
+def clear_dir(folder_path, max_limit=5):
     os.makedirs(folder_path, exist_ok=True)
     files = os.listdir(folder_path)
-    if len(files) > 5:
+    if len(files) > max_limit:
         for file_object in files:
             file_path = os.path.join(folder_path, file_object)
             if os.path.isfile(file_path) or os.path.islink(file_path):

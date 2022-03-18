@@ -8,4 +8,5 @@ SMILE_CLASSIFIER='haarcascade_smile.xml'
 FACE_CLASSIFIER='haarcascade_frontalface_default.xml'
 DB_HOST = 'sqlite:///persistence/test.db'
 UPLOAD_FOLDER = './static/uploads'
+RECENT_FOLDER = './static/recent'
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024
