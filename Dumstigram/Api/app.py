@@ -81,7 +81,14 @@ app = Flask(__name__)
 CORS(app)
 with app.app_context():
     initialize()
-    from views import healthCheck, display, filters, helloWorld, home, recent
+    from views import (healthCheck,
+                       display,
+                       filters,
+                       helloWorld,
+                       home,
+                       recent,
+                       posts
+                       )
     app.config['HEALTHZ'] = {
         "live": healthCheck.liveness,
         "ready": healthCheck.readiness,
@@ -92,7 +99,7 @@ with app.app_context():
     app.register_blueprint(helloWorld.helloWorld)
     app.register_blueprint(home.home, url_prefix='/home')
     app.register_blueprint(recent.recent, url_prefix='/recent')
-
+    app.register_blueprint(posts.posts, url_prefix='/posts')
 
 if __name__ == '__main__':
     app_port = os.environ.get('PORT') or app.config['PORT']

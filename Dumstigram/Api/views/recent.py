@@ -1,4 +1,6 @@
 import os
+import json
+import base64
 from flask import Blueprint, current_app
 from .utils import clear_dir
 
@@ -12,8 +14,7 @@ with current_app.app_context():
 def get_recent_frys(num_recent):
     clear_dir(recent_folder, 20)
     return_obj = {}
-    # keys_to_fetch = int(num_recent)
-    recent_keys = redis.scan_iter('*')
+    recent_keys = redis.scan_iter('posts:*')
     for byte_key in recent_keys:
         r_key = byte_key.decode('utf-8')
         expiration = str(redis.ttl(r_key))
@@ -21,8 +22,19 @@ def get_recent_frys(num_recent):
         if not os.path.exists(recent_folder):
             os.makedirs(recent_folder)
         with open(dest_path, 'wb') as f:
-            f.write(redis.get(r_key))
+            post_info = redis.get(r_key)
+            full_post = json.loads(post_info.decode('ascii'))
+            img_bytes = full_post.get('bytes', None)
+            that = img_bytes.encode('ascii')
+            bytess = base64.b64decode(that)
+            f.write(bytess)
             f.close()
+            return_obj[str(r_key)] = {
+                'img_url': dest_path,
+                'username': full_post.get('username', None),
+                'avatar_url': full_post.get('avatar_url', None),
+                'caption': full_post.get('caption', None),
+                'expiration': expiration
+                }
 
-        return_obj[expiration + '-' + str(r_key)] = dest_path
     return return_obj

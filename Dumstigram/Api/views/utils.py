@@ -44,8 +44,7 @@ def apply_random_filters(filters, input_img):
     return running_img
 
 
-def use_given_file(filter_name):
-    file = request.files['file']
+def use_given_file(file, filter_name):
     # if user does not select file, browser also
     # submit an empty part without filename
     if file.filename == '':
@@ -63,8 +62,8 @@ def use_given_file(filter_name):
     return f'File not allowed {file.filename}'
 
 
-def use_file_url(filter_name):
-    file_request = requests.get(request.args.get('file_url'))
+def use_file_url(file_url, filter_name):
+    file_request = requests.get(file_url)
 
     name = uuid.uuid4().hex
     filename = secure_filename(name + '.png')
@@ -91,7 +90,7 @@ def apply_filters(filter_name, input_file, filename, name):
         redis.setex(name, current_app.config['REDIS_TTL'], file_bytes)
         logger.debug(f'Saving filtered img bytes to redis key {name}')
 
-    return filename, name
+    return filename, name, input_file
 
 
 def process_image(filter_name=None):
@@ -100,10 +99,24 @@ def process_image(filter_name=None):
 
     if 'file_url' in request.args:
         print('file_url is {}'.format(request.args))
-        return use_file_url(filter_name)
+        file_url = request.args.get('file_url')
+        return use_file_url(file_url, filter_name)
     elif 'file' in request.files:
         print('file is {}'.format(request.files))
-        return use_given_file(filter_name)
+        file = request.files['file']
+        return use_given_file(file, filter_name)
     else:
         print('ERROR')
         return 'No file was uploaded or no url was provided'
+
+
+def process_image_file(file, filter_name=None):
+    # Clear out static folder to preserve space
+    clear_dir(uploads)
+    return use_given_file(file, filter_name)
+
+
+def process_image_url(file_url, filter_name=None):
+    # Clear out static folder to preserve space
+    clear_dir(uploads)
+    return use_file_url(file_url, filter_name)
