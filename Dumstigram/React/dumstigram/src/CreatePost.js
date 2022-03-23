@@ -5,6 +5,10 @@ import Avatar from '@material-ui/core/Avatar';
 import FileUpload from './FileUpload.js';
 
 function CreatePost({overlayClick}) {
+  const [username, setUsername] = useState('dumsty');
+  const [caption, setCaption] = useState('Toasty');
+  const [avatarUrl, setAvatarUrl] = useState('https://i.redd.it/b67mzvcj3fl81.jpg');
+  const [ttl, setTtl] = useState('43200');
   const [selectedFileUrl, setSelectedFileUrl] = useState('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg');
   const [selectedFile, setSelectedFile] = useState();
   const [filters, setFilters] = useState();
@@ -42,7 +46,7 @@ function CreatePost({overlayClick}) {
 
   const handleSubmission = () => {
     setIsLoading(true);
-    let uploadUrl = `${process.env.REACT_APP_BACKEND_SERVER}/home`;
+    let uploadUrl = `${process.env.REACT_APP_BACKEND_SERVER}/posts`;
     if (document.querySelector('input[name="selected_filter"]:checked')){
       const isoFilter = document.querySelector('input[name="selected_filter"]:checked').value
       uploadUrl = `${process.env.REACT_APP_BACKEND_SERVER}/filters/${isoFilter}`;
@@ -50,13 +54,16 @@ function CreatePost({overlayClick}) {
     const formData = new FormData();
 
     formData.append('file', selectedFile);
+    // formData.append("document", JSON.stringify(documentJson));
+    formData.append('username', username);
+    formData.append('caption', caption);
+    formData.append('ttl', ttl);
+    formData.append('avatar', avatarUrl);
 
     axios({
         url: uploadUrl,
-        params: { asApi: true },
         data: formData,
         method: 'POST',
-        headers: { "Content-Type": "multipart/form-data" },
     })
       .then((response) => {
         setIsLoading(false);
@@ -94,6 +101,38 @@ function CreatePost({overlayClick}) {
               </div>);
             })
           }
+          <label>Username:
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </label>
+          <br/>
+          <label>Caption:
+            <input
+              type="text"
+              value={caption}
+              onChange={(e) => setCaption(e.target.value)}
+            />
+          </label>
+          <br/>
+          <label>Avatar url:
+            <input
+              type="text"
+              value={avatarUrl}
+              onChange={(e) => setAvatarUrl(e.target.value)}
+            />
+          </label>
+          <br/>
+          <label>post ttl:
+            <input
+              type="text"
+              value={ttl}
+              onChange={(e) => setTtl(e.target.value)}
+            />
+          </label>
+          <br/>
           <input type="file" name="file" onChange={changeHandler} />
           <div>
               <button onClick={handleSubmission}>Submit</button>

@@ -18,14 +18,12 @@ function App() {
         headers: {}
     }).then((response) => {
       const recentPosts = Object.keys(response.data).map((recent) => {
-        const srcVal = `${process.env.REACT_APP_BACKEND_SERVER}${response.data[recent].substr(1)}`
+        const post = response.data[recent];
         return {
           id: recent,
           post: {
-            username: recent,
-            avatarUrl: 'https://image-cdn.hypb.st/https%3A%2F%2Fhypebeast.com%2Fimage%2F2020%2F06%2Fcolumbus-ohio-renamed-to-flavortown-petition-guy-fieri-tw.jpg?w=960&cbr=1&q=90&fit=max',
-            caption: 'Toooasttyyyyy',
-            imgUrl: srcVal,
+            ...post,
+            img_url: `${process.env.REACT_APP_BACKEND_SERVER}${post['img_url'].substr(1)}`,
           }
         };
       });
@@ -33,8 +31,8 @@ function App() {
         key: resp.id,
         post: resp.post,
       })).sort((l, r) => {
-        const lExpir = parseInt(l.key.substr(0, l.key.indexOf('-')));
-        const rExpir = parseInt(r.key.substr(0, r.key.indexOf('-')));
+        const lExpir = parseInt(l.post.expiration);
+        const rExpir = parseInt(r.post.expiration);
         return rExpir - lExpir;
 
       }));
@@ -63,7 +61,8 @@ function App() {
           :<div className="app__postsLeft">
             {
               posts.map(({key, post}) => {
-                return <Post key={key} username={post.username} avatarUrl={post.avatarUrl} imgUrl={post.imgUrl} caption={post.caption} />
+                console.log(post);
+                return <Post key={key} username={post.username} avatarUrl={post.avatar_url} imgUrl={post.img_url} caption={post.caption} />
               })
             }
           </div>
