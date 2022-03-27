@@ -10,3 +10,22 @@
 .header__image {
   object-fit: contain;
 }
+
+.header__admin {
+  display: flex;
+}
+
+.header__admin__username {
+  margin: auto;
+}
+
+.header__admin__upload {
+  height: 50px;
+  width: 50px;
+  float: left;
+  margin: auto;
+}
+
+.header__admin__avatar {
+  margin: 10px;
+}

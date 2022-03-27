@@ -34,7 +34,8 @@ def get_recent_frys(num_recent):
                 'username': full_post.get('username', None),
                 'avatar_url': full_post.get('avatar_url', None),
                 'caption': full_post.get('caption', None),
-                'expiration': expiration
+                'expiration': expiration,
+                'created': full_post.get('created', None),
                 }
 
     return return_obj

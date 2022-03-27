@@ -9,6 +9,8 @@ import CreatePostOverlay from './CreatePostOverlay.js'
 function App() {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState([false]);
+  const [username, setUsername] = useState('dumsty');
+  const [avatarUrl, setAvatarUrl] = useState('https://i.redd.it/b67mzvcj3fl81.jpg');
 
   useEffect(() => {
     setIsLoading(true);
@@ -19,10 +21,13 @@ function App() {
     }).then((response) => {
       const recentPosts = Object.keys(response.data).map((recent) => {
         const post = response.data[recent];
+        const formattedExpir = new Date(0);
+        formattedExpir.setSeconds(post.expiration);
         return {
           id: recent,
           post: {
             ...post,
+            formattedExpir: formattedExpir.toISOString().substr(11,8),
             img_url: `${process.env.REACT_APP_BACKEND_SERVER}${post['img_url'].substr(1)}`,
           }
         };
@@ -31,9 +36,9 @@ function App() {
         key: resp.id,
         post: resp.post,
       })).sort((l, r) => {
-        const lExpir = parseInt(l.post.expiration);
-        const rExpir = parseInt(r.post.expiration);
-        return rExpir - lExpir;
+        const lCreated = parseInt(l.post.created);
+        const rCreated = parseInt(r.post.created);
+        return rCreated - lCreated;
 
       }));
       setIsLoading(false);
@@ -53,16 +58,15 @@ function App() {
 
   return (
     <div className="app">
-      <CreatePostOverlay creatingPost={isCreatingPost} overlayClick={handleOverlayClick}/>
-      <Header overlayClick={handleOverlayClick}/>
+      <CreatePostOverlay creatingPost={isCreatingPost} overlayClick={handleOverlayClick} avatarUrl={avatarUrl} username={username}/>
+      <Header overlayClick={handleOverlayClick} avatarUrl={avatarUrl} username={username}/>
       <div className="app__posts">
         { isLoading
           ?<Rings color="#00BFFF" height={50} width={50} />
           :<div className="app__postsLeft">
             {
               posts.map(({key, post}) => {
-                console.log(post);
-                return <Post key={key} username={post.username} avatarUrl={post.avatar_url} imgUrl={post.img_url} caption={post.caption} />
+                return <Post key={key} username={post.username} avatarUrl={post.avatar_url} imgUrl={post.img_url} caption={post.caption} expiration={post.formattedExpir} />
               })
             }
           </div>

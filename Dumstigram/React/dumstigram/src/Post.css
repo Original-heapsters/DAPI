@@ -21,8 +21,14 @@
   display: flex;
   align-items: center;
   padding: 20px;
+  position: relative;
 }
 
-.post__avatar{
+.post__header__avatar{
   margin-right: 10px;
+}
+
+.post__header__expiration{
+  position: absolute;
+  right: 0px;
 }

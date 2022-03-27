@@ -2,13 +2,13 @@ import './CreatePostOverlay.css'
 import React, { useState } from 'react';
 import CreatePost from './CreatePost.js';
 
-function CreatePostOverlay({creatingPost, overlayClick}){
+function CreatePostOverlay({creatingPost, overlayClick, username, avatarUrl}){
 
 	return(
 		<div className='createPostOverlay'>
 			{ !creatingPost
 			? <div className='createPostOverlay__overlay'>
-					<CreatePost overlayClick={overlayClick}/>
+					<CreatePost overlayClick={overlayClick} username={username} avatarUrl={avatarUrl}/>
 			</div>
 			:<div/>
 		}

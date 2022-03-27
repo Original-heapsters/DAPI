@@ -4,10 +4,10 @@ import axios from 'axios';
 import Avatar from '@material-ui/core/Avatar';
 import FileUpload from './FileUpload.js';
 
-function CreatePost({overlayClick}) {
-  const [username, setUsername] = useState('dumsty');
+function CreatePost({overlayClick, username, avatarUrl}) {
+  // const [username, setUsername] = useState('dumsty');
   const [caption, setCaption] = useState('Toasty');
-  const [avatarUrl, setAvatarUrl] = useState('https://i.redd.it/b67mzvcj3fl81.jpg');
+  // const [avatarUrl, setAvatarUrl] = useState('https://i.redd.it/b67mzvcj3fl81.jpg');
   const [ttl, setTtl] = useState('43200');
   const [selectedFileUrl, setSelectedFileUrl] = useState('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg');
   const [selectedFile, setSelectedFile] = useState();
@@ -81,6 +81,12 @@ function CreatePost({overlayClick}) {
     <div className='createPost'>
       <div className='createPost__header'>
         <h2>Create new Fry</h2>
+        <input
+          className='createPost__header__closeButton'
+          type="button"
+          value='X'
+          onClick={overlayClick}
+        />
       </div>
       <div className='createPost__body'>
         <div className='createPost__preview'>
@@ -101,27 +107,12 @@ function CreatePost({overlayClick}) {
               </div>);
             })
           }
-          <label>Username:
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </label>
           <br/>
           <label>Caption:
             <input
               type="text"
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
-            />
-          </label>
-          <br/>
-          <label>Avatar url:
-            <input
-              type="text"
-              value={avatarUrl}
-              onChange={(e) => setAvatarUrl(e.target.value)}
             />
           </label>
           <br/>
