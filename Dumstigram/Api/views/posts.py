@@ -1,5 +1,6 @@
 import io
 import base64
+import time
 import json
 from flask import Blueprint, current_app, render_template, request, send_file
 from . import utils
@@ -43,7 +44,8 @@ def create_post():
                     'bytes': base64.b64encode(file_bytes).decode('ascii'),
                     'username': username,
                     'avatar_url': avatar,
-                    'caption': caption
+                    'caption': caption,
+                    'created': time.time(),
                     }
         redis.setex('posts:{}'.format(name),
                     ttl,
