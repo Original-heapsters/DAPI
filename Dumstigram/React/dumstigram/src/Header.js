@@ -8,7 +8,7 @@ function Header({overlayClick, avatarUrl, username}) {
     <div className="header">
       <img
         className="header__image"
-        src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
+        src={process.env.PUBLIC_URL + '/logo.png'}
         alt=""
       />
       <div className='header__admin'>

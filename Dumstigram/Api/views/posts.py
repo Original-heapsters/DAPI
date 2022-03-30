@@ -12,9 +12,11 @@ with current_app.app_context():
 
 
 @posts.route('', methods=['POST'])
-@posts.route('/new', methods=['POST'])
-@posts.route('/create', methods=['POST'])
-def create_post():
+@posts.route('<filter_name>', methods=['POST'])
+@posts.route('/new/<filter_name>', methods=['POST'])
+@posts.route('/create/<filter_name>', methods=['POST'])
+def create_post(filter_name=None):
+    print(filter_name)
     post_info = request.form
     file_input = request.files.get('file', None)
 
@@ -28,9 +30,9 @@ def create_post():
     caption = post_info.get('caption', None)
 
     if file_url is not None:
-        result = utils.process_image_url(file_url)
+        result = utils.process_image_url(file_url, filter_name)
     elif file_input is not None:
-        result = utils.process_image_file(file_input)
+        result = utils.process_image_file(file_input, filter_name)
     else:
         raise ValueError("Missing both file and file url")
 
@@ -74,21 +76,21 @@ def upload_form():
     return render_template('upload.html')
 
 
-@posts.route('', methods=['POST'])
-def upload_file():
-    asApi = request.args.get('asApi')
-    print('asApi is {}'.format(asApi))
-    result = utils.process_image()
-    filename, name = result
-    if asApi and name:
-        # send file as attachment as api response
-        return send_file(
-            io.BytesIO(redis.get(name)),
-            as_attachment=True,
-            attachment_filename=filename
-        )
-    elif not asApi and filename:
-        # re-render to barebones frontend
-        return render_template('upload.html', filename=filename)
-    else:
-        return result
+# @posts.route('', methods=['POST'])
+# def upload_file():
+#     asApi = request.args.get('asApi')
+#     print('asApi is {}'.format(asApi))
+#     result = utils.process_image()
+#     filename, name = result
+#     if asApi and name:
+#         # send file as attachment as api response
+#         return send_file(
+#             io.BytesIO(redis.get(name)),
+#             as_attachment=True,
+#             attachment_filename=filename
+#         )
+#     elif not asApi and filename:
+#         # re-render to barebones frontend
+#         return render_template('upload.html', filename=filename)
+#     else:
+#         return result

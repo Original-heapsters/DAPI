@@ -9,6 +9,7 @@
 
 .header__image {
   object-fit: contain;
+  height: 50px;
 }
 
 .header__admin {

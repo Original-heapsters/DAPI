@@ -49,7 +49,7 @@ function CreatePost({overlayClick, username, avatarUrl}) {
     let uploadUrl = `${process.env.REACT_APP_BACKEND_SERVER}/posts`;
     if (document.querySelector('input[name="selected_filter"]:checked')){
       const isoFilter = document.querySelector('input[name="selected_filter"]:checked').value
-      uploadUrl = `${process.env.REACT_APP_BACKEND_SERVER}/filters/${isoFilter}`;
+      uploadUrl = `${process.env.REACT_APP_BACKEND_SERVER}/posts/${isoFilter}`;
     }
     const formData = new FormData();
 
