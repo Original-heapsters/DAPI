@@ -21,13 +21,10 @@ function App() {
     }).then((response) => {
       const recentPosts = Object.keys(response.data).map((recent) => {
         const post = response.data[recent];
-        const formattedExpir = new Date(0);
-        formattedExpir.setSeconds(post.expiration);
         return {
           id: recent,
           post: {
             ...post,
-            formattedExpir: formattedExpir.toISOString().substr(11,8),
             img_url: `${process.env.REACT_APP_BACKEND_SERVER}${post['img_url'].substr(1)}`,
           }
         };
@@ -66,7 +63,7 @@ function App() {
           :<div className="app__postsLeft">
             {
               posts.map(({key, post}) => {
-                return <Post key={key} username={post.username} avatarUrl={post.avatar_url} imgUrl={post.img_url} caption={post.caption} expiration={post.formattedExpir} />
+                return <Post key={key} username={post.username} avatarUrl={post.avatar_url} imgUrl={post.img_url} caption={post.caption} expiration={post.expiration} />
               })
             }
           </div>
