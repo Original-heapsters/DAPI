@@ -1,9 +1,11 @@
 * {
   margin: 0;
+  font-family: "Comic Sans MS", "cursive", sans;
 }
 
 .app{
-  background-color: #fafafa;
+  background-color: DarkSeaGreen;
+  background-image: url("/public/background.png");
 }
 
 .app__posts {
@@ -17,7 +19,7 @@
 }
 
 .app__header{
-  background-color: white;
+  background-color: black;
   object-fit: contain;
   padding: 20px;
   border-bottom: 1px solid lightgray;
