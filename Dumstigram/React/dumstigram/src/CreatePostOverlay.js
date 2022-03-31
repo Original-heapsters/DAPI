@@ -1,5 +1,5 @@
 import './CreatePostOverlay.css'
-import React, { useState } from 'react';
+import React from 'react';
 import CreatePost from './CreatePost.js';
 
 function CreatePostOverlay({creatingPost, overlayClick, username, avatarUrl}){

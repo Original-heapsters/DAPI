@@ -5,12 +5,10 @@ import React, { useState } from 'react';
 
 function FileUploadPage({overlayClick}){
   const [selectedFile, setSelectedFile] = useState();
-	const [isFilePicked, setIsFilePicked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const changeHandler = (event) => {
 		setSelectedFile(event.target.files[0]);
-		setIsFilePicked(true);
 	};
 
   const handleSubmission = () => {
@@ -41,7 +39,7 @@ function FileUploadPage({overlayClick}){
     { isLoading
       ? <div  className='fileUpload__spinner'><Grid color="#00BFFF" height={50} width={50} /></div>
       : <div>
-          <input type='image' className='fileUpload__icon' src={process.env.PUBLIC_URL + '/upload.png'} onClick={overlayClick}/>
+          <input type='image' alt='upload' className='fileUpload__icon' src={process.env.PUBLIC_URL + '/upload.png'} onClick={overlayClick}/>
           <div className='fileUpload__form'>
             <input type="file" name="file" onChange={changeHandler} />
             <div>
