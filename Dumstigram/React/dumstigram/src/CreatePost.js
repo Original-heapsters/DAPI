@@ -1,19 +1,13 @@
 import './CreatePost.css';
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import Avatar from '@material-ui/core/Avatar';
-import FileUpload from './FileUpload.js';
 
 function CreatePost({overlayClick, username, avatarUrl}) {
-  // const [username, setUsername] = useState('dumsty');
   const [caption, setCaption] = useState('Toasty');
-  // const [avatarUrl, setAvatarUrl] = useState('https://i.redd.it/b67mzvcj3fl81.jpg');
   const [ttl, setTtl] = useState('43200');
   const [selectedFileUrl, setSelectedFileUrl] = useState('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg');
   const [selectedFile, setSelectedFile] = useState();
   const [filters, setFilters] = useState();
-	const [isFilePicked, setIsFilePicked] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [isLoadingFilters, setIsLoadingFilters] = useState(true);
 
   useEffect(() => {
@@ -38,14 +32,12 @@ function CreatePost({overlayClick, username, avatarUrl}) {
   }, []);
 
   const changeHandler = (event) => {
-		setIsFilePicked(true);
     const tmppath = URL.createObjectURL(event.target.files[0]);
     setSelectedFileUrl(tmppath);
     setSelectedFile(event.target.files[0]);
 	};
 
   const handleSubmission = () => {
-    setIsLoading(true);
     let uploadUrl = `${process.env.REACT_APP_BACKEND_SERVER}/posts`;
     if (document.querySelector('input[name="selected_filter"]:checked')){
       const isoFilter = document.querySelector('input[name="selected_filter"]:checked').value
@@ -66,12 +58,10 @@ function CreatePost({overlayClick, username, avatarUrl}) {
         method: 'POST',
     })
       .then((response) => {
-        setIsLoading(false);
         window.location.reload(false);
         overlayClick();
       })
       .catch((error) => {
-        setIsLoading(false);
         console.error('Error:', error);
         overlayClick();
       });

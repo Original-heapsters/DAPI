@@ -1,7 +1,6 @@
 import './Header.css';
 import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import FileUploadPage from './FileUpload';
 
 function Header({overlayClick, avatarUrl, username}) {
   return (

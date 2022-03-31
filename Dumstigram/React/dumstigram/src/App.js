@@ -9,8 +9,8 @@ import CreatePostOverlay from './CreatePostOverlay.js'
 function App() {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState([false]);
-  const [username, setUsername] = useState('dumsty');
-  const [avatarUrl, setAvatarUrl] = useState('https://i.redd.it/b67mzvcj3fl81.jpg');
+  const [username] = useState('dumsty');
+  const [avatarUrl] = useState('https://i.redd.it/b67mzvcj3fl81.jpg');
 
   useEffect(() => {
     setIsLoading(true);
