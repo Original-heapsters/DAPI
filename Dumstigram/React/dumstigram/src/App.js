@@ -9,7 +9,7 @@ import CreatePostOverlay from './CreatePostOverlay.js'
 function App() {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState([false]);
-  const [username] = useState('dumsty');
+  const [username] = useState('PaPaBl3Ss');
   const [avatarUrl] = useState('https://i.redd.it/b67mzvcj3fl81.jpg');
 
   useEffect(() => {
