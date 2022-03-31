@@ -10,7 +10,7 @@ function App() {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState([false]);
   const [username] = useState('PaPaBl3Ss');
-  const [avatarUrl] = useState('https://i.redd.it/b67mzvcj3fl81.jpg');
+  const [avatarUrl] = useState('https://i.kym-cdn.com/photos/images/newsfeed/001/931/171/1d5.jpg');
 
   useEffect(() => {
     setIsLoading(true);
