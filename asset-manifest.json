@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/DAPI/static/css/main.af312e4e.css",
-    "main.js": "/DAPI/static/js/main.7390af48.js",
+    "main.css": "/DAPI/static/css/main.35977471.css",
+    "main.js": "/DAPI/static/js/main.08627fa2.js",
     "static/js/787.a9aefc9d.chunk.js": "/DAPI/static/js/787.a9aefc9d.chunk.js",
-    "static/media/background.png": "/DAPI/static/media/background.54481b3f236f9692f8b4.png",
+    "static/media/background.png": "/DAPI/static/media/background.0eba79205b15b860510c.png",
     "index.html": "/DAPI/index.html",
-    "main.af312e4e.css.map": "/DAPI/static/css/main.af312e4e.css.map",
-    "main.7390af48.js.map": "/DAPI/static/js/main.7390af48.js.map",
+    "main.35977471.css.map": "/DAPI/static/css/main.35977471.css.map",
+    "main.08627fa2.js.map": "/DAPI/static/js/main.08627fa2.js.map",
     "787.a9aefc9d.chunk.js.map": "/DAPI/static/js/787.a9aefc9d.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.af312e4e.css",
-    "static/js/main.7390af48.js"
+    "static/css/main.35977471.css",
+    "static/js/main.08627fa2.js"
   ]
 }
