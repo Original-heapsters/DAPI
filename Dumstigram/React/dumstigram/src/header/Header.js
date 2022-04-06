@@ -1,8 +1,11 @@
-import './Header.css';
+import '../styles/Header.css';
 import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 
-function Header({overlayClick, avatarUrl, username}) {
+function Header({overlayClick, avatarUrl, username, triggerLogin}) {
+  const handleLogin = () => {
+      triggerLogin('testing', 'https://i.pinimg.com/236x/b7/91/52/b79152a9f75782757086d5d13489f6d1--ugly-guys-guy-pictures.jpg')
+  }
   return (
     <div className="header">
       <img
@@ -16,8 +19,9 @@ function Header({overlayClick, avatarUrl, username}) {
          className='header__admin__avatar'
          alt='usernameBoi'
          src={avatarUrl}
+         onClick={handleLogin}
         />
-        <h3 className='header__admin__username'>{username}</h3>
+        <h3 className='header__admin__username' onClick={handleLogin}>{username}</h3>
       </div>
     </div>
   )

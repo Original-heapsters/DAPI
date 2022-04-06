@@ -1,4 +1,4 @@
-import './CreatePostOverlay.css'
+import '../styles/CreatePostOverlay.css'
 import React from 'react';
 import CreatePost from './CreatePost.js';
 
