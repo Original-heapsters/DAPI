@@ -8,7 +8,7 @@ on:
       - 'Dumstigram/Infra/*'
 
 jobs:
-  build:
+  deployDiscord:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
