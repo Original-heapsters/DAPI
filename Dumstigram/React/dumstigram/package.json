@@ -15,7 +15,6 @@
     "react-cookie": "^4.1.1",
     "react-dom": "^17.0.2",
     "react-loader-spinner": "^6.0.0-0",
-    "react-scripts": "5.0.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -23,6 +22,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "lint": "eslint src/**/*.js src/**/*.jsx",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
@@ -43,5 +43,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint": "^8.12.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-react-hooks": "^4.4.0",
+    "react-scripts": "^5.0.0"
   }
 }
