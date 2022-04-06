@@ -1,46 +1,45 @@
 import '../styles/CreatePost.css';
-import React, {useState, useEffect} from 'react';
-import axios from 'axios';
+import { Rings } from 'react-loader-spinner';
+import React, { useState, useEffect } from 'react';
+import * as api from '../api';
 
-function CreatePost({overlayClick, username, avatarUrl}) {
+function CreatePost({ overlayClick, username, avatarUrl }) {
   const [caption, setCaption] = useState('Toasty');
   const [ttl, setTtl] = useState('43200');
   const [selectedFileUrl, setSelectedFileUrl] = useState('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg');
   const [selectedFile, setSelectedFile] = useState();
   const [filters, setFilters] = useState();
   const [isLoadingFilters, setIsLoadingFilters] = useState(true);
+  const [isPosting, setIsPosting] = useState(false);
 
   useEffect(() => {
     setIsLoadingFilters(true);
-    axios({
-        url: `${process.env.REACT_APP_BACKEND_SERVER}/filters`,
-        method: 'GET',
-        headers: {}
-    }).then((response) => {
-      const filters = response.data.map((filter) => {
-        return {
-          id: filter
-        };
+    async function getFilters() {
+      const possibleFilters = await api.getFilters();
+      return possibleFilters;
+    }
+    getFilters()
+      .then((filters) => {
+        setFilters(filters);
+        setIsLoadingFilters(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsLoadingFilters(false);
       });
-      setFilters(filters);
-      setIsLoadingFilters(false);
-    })
-    .catch((error) => {
-      setIsLoadingFilters(false);
-      console.log(error);
-    });
   }, []);
 
   const changeHandler = (event) => {
     const tmppath = URL.createObjectURL(event.target.files[0]);
     setSelectedFileUrl(tmppath);
     setSelectedFile(event.target.files[0]);
-	};
+  };
 
   const handleSubmission = () => {
+    setIsPosting(true);
     let uploadUrl = `${process.env.REACT_APP_BACKEND_SERVER}/posts`;
-    if (document.querySelector('input[name="selected_filter"]:checked')){
-      const isoFilter = document.querySelector('input[name="selected_filter"]:checked').value
+    if (document.querySelector('input[name="selected_filter"]:checked')) {
+      const isoFilter = document.querySelector('input[name="selected_filter"]:checked').value;
       uploadUrl = `${process.env.REACT_APP_BACKEND_SERVER}/posts/${isoFilter}`;
     }
     const formData = new FormData();
@@ -52,76 +51,80 @@ function CreatePost({overlayClick, username, avatarUrl}) {
     formData.append('ttl', ttl);
     formData.append('avatar', avatarUrl);
 
-    axios({
-        url: uploadUrl,
-        data: formData,
-        method: 'POST',
-    })
-      .then((response) => {
+    async function createPost(url, postBody) {
+      await api.createPost(url, postBody);
+    }
+    createPost(uploadUrl, formData)
+      .then(() => {
+        setIsPosting(false);
         window.location.reload(false);
         overlayClick();
       })
       .catch((error) => {
         console.error('Error:', error);
+        setIsPosting(false);
         overlayClick();
       });
   };
 
   return (
-    <div className='createPost'>
-      <div className='createPost__header'>
+    <div className="createPost">
+      <div className="createPost__header">
         <h2>Create new Fry</h2>
         <input
-          className='createPost__header__closeButton'
+          className="createPost__header__closeButton"
           type="button"
-          value='X'
+          value="X"
           onClick={overlayClick}
         />
       </div>
-      <div className='createPost__body'>
-        <div className='createPost__preview'>
+      <div className="createPost__body">
+        <div className="createPost__preview">
           <img
-            className='createPost__image'
+            className="createPost__image"
             src={selectedFileUrl}
-            alt=''
+            alt=""
           />
         </div>
-        <div className='createPost__form'>
+        <div className="createPost__form">
           { isLoadingFilters
-            ?<div/>
-            :
-            filters.map((filter) => {
-              return (<div key={filter.id} className='createPost__form__radio'>
-                <input type="radio" id={filter.id} name='selected_filter' value={filter.id}/>
+            ? <Rings color="#00BFFF" height={50} width={50} />
+            : filters.map((filter) => (
+              <div key={filter.id} className="createPost__form__radio">
+                <input type="radio" id={filter.id} name="selected_filter" value={filter.id} />
                 <label id={filter.id}>{filter.id}</label>
-              </div>);
-            })
-          }
-          <br/>
-          <label>Caption:
+              </div>
+            ))}
+          <br />
+          <label>
+            Caption:
             <input
               type="text"
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
             />
           </label>
-          <br/>
-          <label>post ttl:
+          <br />
+          <label>
+            post ttl:
             <input
               type="text"
               value={ttl}
               onChange={(e) => setTtl(e.target.value)}
             />
           </label>
-          <br/>
+          <br />
           <input type="file" name="file" onChange={changeHandler} />
           <div>
-              <button onClick={handleSubmission}>Submit</button>
+            { isPosting
+              ? <Rings color="#00BFFF" height={50} width={50} />
+              : <button onClick={handleSubmission}>Submit</button>}
+
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default CreatePost
+export default CreatePost;
