@@ -23,7 +23,7 @@ function Header({
           src={avatarUrl}
           onClick={handleLogin}
         />
-        <h3 className="header__admin__username" onClick={handleLogin}>{username}</h3>
+        <h3 className="header__admin__username">{username}</h3>
       </div>
     </div>
   );
