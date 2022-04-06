@@ -70,7 +70,7 @@ function App() {
         username={cookies.username}
         triggerLogin={handleLogin}
       />
-      <div className="app__posts" >
+      <div className="app__posts">
         { isLoading
           ? <Rings color="#00BFFF" height={50} width={50} />
           : (
