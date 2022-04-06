@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Rings } from  'react-loader-spinner'
-import './App.css';
-import Post from './Post.js';
-import Header from './Header.js';
-import CreatePostOverlay from './CreatePostOverlay.js'
+import { useCookies } from 'react-cookie';
+import './styles/App.css';
+import Post from './post/Post.js';
+import Header from './header/Header.js';
+import CreatePostOverlay from './post/CreatePostOverlay.js'
 
 function App() {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState([false]);
-  const [username] = useState('PaPaBl3Ss');
-  const [avatarUrl] = useState('https://i.kym-cdn.com/photos/images/newsfeed/001/931/171/1d5.jpg');
+  const [isCreatingPost, setIsCreatingPost] = useState([false])
+  const [cookies, setCookie] = useCookies(['user']);
+  const [username, setUsername] = useState('PaPaBl3Ss');
+  const [avatarUrl, setAvatar] = useState('https://i.kym-cdn.com/photos/images/newsfeed/001/931/171/1d5.jpg');
 
   useEffect(() => {
     setIsLoading(true);
@@ -46,17 +49,29 @@ function App() {
     });
   }, []);
 
-  const [isCreatingPost, setIsCreatingPost] = useState([false])
 
+  const updateUsername = (newUsername) => {
+    setCookie('username', newUsername, { path: '/' });
+  }
+
+  const updateAvatarUrl = (newAvatarUrl) => {
+    setCookie('avatarUrl', newAvatarUrl, { path: '/' });
+  }
+
+  const handleLogin = (username, avatarUrl) => {
+    updateUsername(username)
+    updateAvatarUrl(avatarUrl)
+    setUsername(cookies.username)
+    setAvatar(cookies.avatarUrl)
+  }
 	const handleOverlayClick = () => {
-		console.log('clicked the thing')
 		setIsCreatingPost(!isCreatingPost)
 	}
 
   return (
     <div className="app">
       <CreatePostOverlay creatingPost={isCreatingPost} overlayClick={handleOverlayClick} avatarUrl={avatarUrl} username={username}/>
-      <Header overlayClick={handleOverlayClick} avatarUrl={avatarUrl} username={username}/>
+      <Header overlayClick={handleOverlayClick} avatarUrl={cookies.avatarUrl} username={cookies.username} triggerLogin={handleLogin}/>
       <div className="app__posts">
         { isLoading
           ?<Rings color="#00BFFF" height={50} width={50} />
