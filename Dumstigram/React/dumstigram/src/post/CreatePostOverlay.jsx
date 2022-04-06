@@ -1,6 +1,6 @@
 import '../styles/CreatePostOverlay.css';
 import React from 'react';
-import CreatePost from './CreatePost.js';
+import CreatePost from './CreatePost';
 
 function CreatePostOverlay({
   creatingPost, overlayClick, username, avatarUrl,
@@ -8,12 +8,12 @@ function CreatePostOverlay({
   return (
     <div className="createPostOverlay">
       { !creatingPost
-			  ? (
-  <div className="createPostOverlay__overlay">
-    <CreatePost overlayClick={overlayClick} username={username} avatarUrl={avatarUrl} />
-  </div>
+        ? (
+          <div className="createPostOverlay__overlay">
+            <CreatePost overlayClick={overlayClick} username={username} avatarUrl={avatarUrl} />
+          </div>
         )
-			  : <div />}
+        : <div />}
 
     </div>
   );

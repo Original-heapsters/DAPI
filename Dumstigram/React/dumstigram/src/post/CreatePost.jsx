@@ -19,12 +19,11 @@ function CreatePost({ overlayClick, username, avatarUrl }) {
       return possibleFilters;
     }
     getFilters()
-      .then((filters) => {
-        setFilters(filters);
+      .then((possFilters) => {
+        setFilters(possFilters);
         setIsLoadingFilters(false);
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
         setIsLoadingFilters(false);
       });
   }, []);
@@ -60,8 +59,7 @@ function CreatePost({ overlayClick, username, avatarUrl }) {
         window.location.reload(false);
         overlayClick();
       })
-      .catch((error) => {
-        console.error('Error:', error);
+      .catch(() => {
         setIsPosting(false);
         overlayClick();
       });
@@ -92,22 +90,24 @@ function CreatePost({ overlayClick, username, avatarUrl }) {
             : filters.map((filter) => (
               <div key={filter.id} className="createPost__form__radio">
                 <input type="radio" id={filter.id} name="selected_filter" value={filter.id} />
-                <label id={filter.id}>{filter.id}</label>
+                <label htmlFor={filter.id} id={filter.id}>{filter.id}</label>
               </div>
             ))}
           <br />
-          <label>
+          <label htmlFor="caption">
             Caption:
             <input
+              id="caption"
               type="text"
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
             />
           </label>
           <br />
-          <label>
+          <label htmlFor="ttl">
             post ttl:
             <input
+              id="ttl"
               type="text"
               value={ttl}
               onChange={(e) => setTtl(e.target.value)}
@@ -118,7 +118,7 @@ function CreatePost({ overlayClick, username, avatarUrl }) {
           <div>
             { isPosting
               ? <Rings color="#00BFFF" height={50} width={50} />
-              : <button onClick={handleSubmission}>Submit</button>}
+              : <button type="button" onClick={handleSubmission}>Submit</button>}
 
           </div>
         </div>
