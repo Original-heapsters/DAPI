@@ -12,7 +12,7 @@ function App() {
   const [isLoading, setIsLoading] = useState([false]);
   const [isCreatingPost, setIsCreatingPost] = useState([false]);
   const [cookies, setCookie] = useCookies(['user']);
-  const [username, setUsername] = useState('PaPaBl3Ss');
+  const [username, setUsername] = useState('PaPaBl3SsS');
   const [avatarUrl, setAvatar] = useState('https://i.kym-cdn.com/photos/images/newsfeed/001/931/171/1d5.jpg');
 
   useEffect(() => {
@@ -33,8 +33,7 @@ function App() {
         }));
         setIsLoading(false);
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
         setIsLoading(false);
       });
   }, []);
@@ -71,7 +70,7 @@ function App() {
         username={cookies.username}
         triggerLogin={handleLogin}
       />
-      <div className="app__posts">
+      <div className="app__posts" >
         { isLoading
           ? <Rings color="#00BFFF" height={50} width={50} />
           : (
