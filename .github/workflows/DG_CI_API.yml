@@ -8,7 +8,7 @@ on:
     - Dumstigram/Api/**
 
 jobs:
-  build:
+  testBackend:
     runs-on: ubuntu-latest
     strategy:
       matrix:
