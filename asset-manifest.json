@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/DAPI/static/css/main.736f3cfd.css",
+    "main.css": "/DAPI/static/css/main.648cd291.css",
     "main.js": "/DAPI/static/js/main.2a5b4ac7.js",
     "static/js/787.a9aefc9d.chunk.js": "/DAPI/static/js/787.a9aefc9d.chunk.js",
     "static/media/background.png": "/DAPI/static/media/background.0eba79205b15b860510c.png",
     "index.html": "/DAPI/index.html",
-    "main.736f3cfd.css.map": "/DAPI/static/css/main.736f3cfd.css.map",
+    "main.648cd291.css.map": "/DAPI/static/css/main.648cd291.css.map",
     "main.2a5b4ac7.js.map": "/DAPI/static/js/main.2a5b4ac7.js.map",
     "787.a9aefc9d.chunk.js.map": "/DAPI/static/js/787.a9aefc9d.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.736f3cfd.css",
+    "static/css/main.648cd291.css",
     "static/js/main.2a5b4ac7.js"
   ]
 }
