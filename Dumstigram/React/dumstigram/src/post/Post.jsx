@@ -43,6 +43,7 @@ function Post({
         alt=""
       />
       {/* header -> avatar -> username */}
+      <input className="post__refry" type="button" value="refry" onClick={() => { console.log(imgUrl); }} />
       <h4 className="post__text">
         <strong>
           {username}
