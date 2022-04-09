@@ -16,6 +16,15 @@
 .post__text{
   font-weight: normal;
   padding: 20px;
+  min-height: 75px;
+}
+
+.post__refry{
+  float: right;
+  width: 100px;
+  height: 50px;
+  margin-right: 10px;
+  font-size: x-large;
 }
 
 .post__header{
