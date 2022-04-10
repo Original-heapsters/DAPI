@@ -61,6 +61,55 @@ def create_post(filter_name=None):
     )
 
 
+@posts.route('/refry/<post_key>', methods=['POST'])
+def refry_post(post_key):
+    print(post_key)
+    post_info = request.form
+
+    if not post_info:
+        raise ValueError("Missing post info")
+
+    ttl = post_info.get('ttl', default_ttl)
+    refryTarget = json.loads(redis.get(post_key))
+    print(refryTarget.keys())
+
+    base64_message = refryTarget['bytes']
+    base64_bytes = base64_message.encode('ascii')
+    message_bytes = base64.b64decode(base64_bytes)
+    result = utils.process_image_bytes(message_bytes, post_key)
+
+    # if file_url is not None:
+    #     result = utils.process_image_url(file_url, filter_name)
+    # elif file_input is not None:
+    #     result = utils.process_image_file(file_input, filter_name)
+    # else:
+    #     raise ValueError("Missing both file and file url")
+
+    filename, name, final_file = result
+    # TODO FRY an entire profile
+    # TODO deep fry the internet
+
+    with open(final_file, 'rb') as f:
+        file_bytes = f.read()
+        post_obj = {
+                    'bytes': base64.b64encode(file_bytes).decode('ascii'),
+                    'username': refryTarget['username'],
+                    'avatar_url': refryTarget['avatar_url'],
+                    'caption': refryTarget['caption'],
+                    'created': time.time(),
+                    }
+        redis.setex('posts:{}'.format(name),
+                    ttl,
+                    json.dumps(post_obj).encode('utf-8'))
+
+    # send file as attachment as api response
+    return send_file(
+        io.BytesIO(redis.get(name)),
+        as_attachment=True,
+        attachment_filename=filename
+    )
+
+
 @posts.route('/<post_id>')
 def post_details(id):
     return render_template('upload.html')

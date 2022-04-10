@@ -15,7 +15,7 @@ function App() {
   const [username, setUsername] = useState('PaPaBl3SsS');
   const [avatarUrl, setAvatar] = useState('https://i.kym-cdn.com/photos/images/newsfeed/001/931/171/1d5.jpg');
 
-  useEffect(() => {
+  const getRecents = () => {
     setIsLoading(true);
     async function fetchData() {
       const response = await api.getRecentFeed(5);
@@ -36,6 +36,11 @@ function App() {
       .catch(() => {
         setIsLoading(false);
       });
+  };
+
+  useEffect(() => {
+    console.log('Run get recents');
+    getRecents();
   }, []);
 
   const updateUsername = (newUsername) => {
@@ -63,6 +68,7 @@ function App() {
         overlayClick={handleOverlayClick}
         avatarUrl={avatarUrl}
         username={username}
+        triggerRefresh={getRecents}
       />
       <Header
         overlayClick={handleOverlayClick}
@@ -78,12 +84,13 @@ function App() {
               {
               posts.map(({ key, post }) => (
                 <Post
-                  key={key}
+                  postId={key}
                   username={post.username}
                   avatarUrl={post.avatar_url}
                   imgUrl={post.img_url}
                   caption={post.caption}
                   expiration={post.expiration}
+                  triggerRefresh={getRecents}
                 />
               ))
             }

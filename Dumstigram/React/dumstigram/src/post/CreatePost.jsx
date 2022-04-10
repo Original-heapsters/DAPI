@@ -3,7 +3,12 @@ import { Rings } from 'react-loader-spinner';
 import React, { useState, useEffect } from 'react';
 import * as api from '../api';
 
-function CreatePost({ overlayClick, username, avatarUrl }) {
+function CreatePost({
+  overlayClick,
+  username,
+  avatarUrl,
+  triggerRefresh,
+}) {
   const [caption, setCaption] = useState('Toasty');
   const [ttl, setTtl] = useState('43200');
   const [selectedFileUrl, setSelectedFileUrl] = useState('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg');
@@ -44,7 +49,6 @@ function CreatePost({ overlayClick, username, avatarUrl }) {
     const formData = new FormData();
 
     formData.append('file', selectedFile);
-    // formData.append("document", JSON.stringify(documentJson));
     formData.append('username', username);
     formData.append('caption', caption);
     formData.append('ttl', ttl);
@@ -56,7 +60,7 @@ function CreatePost({ overlayClick, username, avatarUrl }) {
     createPost(uploadUrl, formData)
       .then(() => {
         setIsPosting(false);
-        window.location.reload(false);
+        triggerRefresh();
         overlayClick();
       })
       .catch(() => {
