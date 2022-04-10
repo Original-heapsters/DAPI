@@ -1,4 +1,5 @@
 import os
+import io
 import shutil
 import random
 import requests
@@ -120,3 +121,15 @@ def process_image_url(file_url, filter_name=None):
     # Clear out static folder to preserve space
     clear_dir(uploads)
     return use_file_url(file_url, filter_name)
+
+
+def process_image_bytes(bytes, fileKey):
+    # Clear out static folder to preserve space
+    clear_dir(uploads)
+    file_prefix = fileKey.split('posts:')[1] + '-refry'
+    filename = file_prefix + '.png'
+    input_file = os.path.join(uploads, filename)
+    with open(input_file, "wb") as f:
+        f.write(io.BytesIO(bytes).getbuffer())
+
+    return apply_filters(None, input_file, filename, file_prefix)

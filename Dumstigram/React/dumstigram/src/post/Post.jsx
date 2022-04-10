@@ -1,12 +1,21 @@
 import '../styles/Post.css';
 import React, { useState, useEffect } from 'react';
+import { Rings } from 'react-loader-spinner';
 import Avatar from '@material-ui/core/Avatar';
+import * as api from '../api';
 
 function Post({
-  username = 'username', avatarUrl = 'https://i.redd.it/b67mzvcj3fl81.jpg', caption = 'lorem ipsum', imgUrl = 'https://i.redd.it/j6a5ve7jtxl81.jpg', expiration = 420,
+  postId = '123',
+  username = 'username',
+  avatarUrl = 'https://i.redd.it/b67mzvcj3fl81.jpg',
+  caption = 'lorem ipsum',
+  imgUrl = 'https://i.redd.it/j6a5ve7jtxl81.jpg',
+  expiration = 420,
+  triggerRefresh,
 }) {
   const [timeLeft, setTimeLeft] = useState(expiration);
   const [formattedTimeLeft, setFormattedTimeLeft] = useState(0);
+  const [isRefrying, setIsRefrying] = useState(false);
 
   const calculateTimeLeft = () => {
     const newTimeLeft = timeLeft - 1;
@@ -14,6 +23,29 @@ function Post({
     expireTime.setSeconds(newTimeLeft);
     setTimeLeft(newTimeLeft);
     return expireTime;
+  };
+
+  const handleRefry = () => {
+    setIsRefrying(true);
+    const formData = new FormData();
+
+    formData.append('username', username);
+    formData.append('caption', caption);
+    formData.append('ttl', expiration);
+    formData.append('avatar', avatarUrl);
+    async function refry(postInfoId, postInfo) {
+      await api.refryPost(postInfoId, postInfo);
+    }
+
+    refry(postId, formData)
+      .then(() => {
+        triggerRefresh();
+        setIsRefrying(false);
+      })
+      .catch(() => {
+        triggerRefresh();
+        setIsRefrying(false);
+      });
   };
 
   useEffect(() => {
@@ -42,8 +74,9 @@ function Post({
         src={imgUrl}
         alt=""
       />
-      {/* header -> avatar -> username */}
-      <input className="post__refry" type="button" value="refry" onClick={() => { }} />
+      { isRefrying
+        ? <Rings className="post__refry" color="#00BFFF" height={50} width={50} />
+        : <input className="post__refry" type="button" value="refry" onClick={handleRefry} />}
       <h4 className="post__text">
         <strong>
           {username}
