@@ -70,7 +70,8 @@ class face_filter(basic_filter):
             return smile_coords
 
     def apply_filter(self, input):
-        print('Applying filter')
+        name = self.get_info()['name']
+        print('Applying filter {}'.format(name))
         print(self.get_info())
         original = self.resize_max_width(input)
 

@@ -33,11 +33,15 @@ def clear_dir(folder_path, max_limit=5):
                 shutil.rmtree(file_path)
 
 
-def apply_random_filters(filters, input_img):
+def apply_random_filters(filters, input_img, sequential=False):
     running_img = None
     num_filters = 1 if not isinstance(filters, list) else len(filters)
     if num_filters == 1:
         running_img = random.choice(filters).apply_filter(input_img)
+    elif sequential:
+        for filter in filters:
+            img_src = running_img if running_img else input_img
+            running_img = filter.apply_filter(img_src)
     else:
         for k in range(random.randint(1, num_filters - 1)):
             img_src = running_img if running_img else input_img
@@ -45,7 +49,7 @@ def apply_random_filters(filters, input_img):
     return running_img
 
 
-def use_given_file(file, filter_name):
+def use_given_file(file, filter_names):
     # if user does not select file, browser also
     # submit an empty part without filename
     if file.filename == '':
@@ -58,7 +62,7 @@ def use_given_file(file, filter_name):
         input_file = os.path.join(uploads, filename)
         file.save(input_file)
         logger.debug(f'Saving temp file to {input_file}')
-        return apply_filters(filter_name, input_file, filename, name)
+        return apply_filters(filter_names, input_file, filename, name)
 
     return f'File not allowed {file.filename}'
 
@@ -75,10 +79,19 @@ def use_file_url(file_url, filter_name):
     return apply_filters(filter_name, input_file, filename, name)
 
 
-def apply_filters(filter_name, input_file, filename, name):
-    if filter_name and filter_classes[filter_name]:
-        chosen_filter = filter_classes[filter_name]
-        filtered_img = apply_random_filters([chosen_filter], input_file)
+def check_items_in_list(input_dict, items):
+    for item in items:
+        if item not in input_dict:
+            return False
+    return True
+
+
+def apply_filters(filter_names, input_file, filename, name):
+    if filter_names and check_items_in_list(filter_classes, filter_names):
+        seq_filters = [filter_classes[x] for x in filter_names]
+        filtered_img = apply_random_filters(seq_filters,
+                                            input_file,
+                                            sequential=True)
     else:
         possible_filters = list(filter_classes.values())
         filtered_img = apply_random_filters(possible_filters, input_file)
@@ -111,22 +124,22 @@ def process_image(filter_name=None):
         return 'No file was uploaded or no url was provided'
 
 
-def process_image_file(file, filter_name=None):
+def process_image_file(file, filter_names=None):
     # Clear out static folder to preserve space
     clear_dir(uploads)
-    return use_given_file(file, filter_name)
+    return use_given_file(file, filter_names)
 
 
-def process_image_url(file_url, filter_name=None):
+def process_image_url(file_url, filter_names=None):
     # Clear out static folder to preserve space
     clear_dir(uploads)
-    return use_file_url(file_url, filter_name)
+    return use_file_url(file_url, filter_names)
 
 
 def process_image_bytes(bytes, fileKey):
     # Clear out static folder to preserve space
     clear_dir(uploads)
-    file_prefix = fileKey.split('posts:')[1] + '-refry'
+    file_prefix = fileKey.split('posts:')[1] + '-' + uuid.uuid4().hex
     filename = file_prefix + '.png'
     input_file = os.path.join(uploads, filename)
     with open(input_file, "wb") as f:

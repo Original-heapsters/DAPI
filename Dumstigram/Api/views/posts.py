@@ -29,10 +29,14 @@ def create_post(filter_name=None):
     file_url = post_info.get('file_url', None)
     caption = post_info.get('caption', None)
 
+    filter_list = post_info.get('filters', filter_name)
+    if filter_list:
+        filter_list = filter_list.replace(' ', '').split(',')
+
     if file_url is not None:
-        result = utils.process_image_url(file_url, filter_name)
+        result = utils.process_image_url(file_url, filter_list)
     elif file_input is not None:
-        result = utils.process_image_file(file_input, filter_name)
+        result = utils.process_image_file(file_input, filter_list)
     else:
         raise ValueError("Missing both file and file url")
 
@@ -77,13 +81,6 @@ def refry_post(post_key):
     base64_bytes = base64_message.encode('ascii')
     message_bytes = base64.b64decode(base64_bytes)
     result = utils.process_image_bytes(message_bytes, post_key)
-
-    # if file_url is not None:
-    #     result = utils.process_image_url(file_url, filter_name)
-    # elif file_input is not None:
-    #     result = utils.process_image_file(file_input, filter_name)
-    # else:
-    #     raise ValueError("Missing both file and file url")
 
     filename, name, final_file = result
     # TODO FRY an entire profile

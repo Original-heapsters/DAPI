@@ -41,12 +41,13 @@ function CreatePost({
 
   const handleSubmission = () => {
     setIsPosting(true);
-    let uploadUrl = `${process.env.REACT_APP_BACKEND_SERVER}/posts`;
-    if (document.querySelector('input[name="selected_filter"]:checked')) {
-      const isoFilter = document.querySelector('input[name="selected_filter"]:checked').value;
-      uploadUrl = `${process.env.REACT_APP_BACKEND_SERVER}/posts/${isoFilter}`;
-    }
+    const uploadUrl = `${process.env.REACT_APP_BACKEND_SERVER}/posts`;
     const formData = new FormData();
+    if (document.querySelector('input[type="checkbox"]:checked')) {
+      const isoFilters = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'));
+      const filterList = isoFilters.reduce((str, filter) => `${filter.value},${str}`, '').slice(0, -1);
+      formData.append('filters', filterList);
+    }
 
     formData.append('file', selectedFile);
     formData.append('username', username);
@@ -93,7 +94,7 @@ function CreatePost({
             ? <Rings color="#00BFFF" height={50} width={50} />
             : filters.map((filter) => (
               <div key={filter.id} className="createPost__form__radio">
-                <input type="radio" id={filter.id} name="selected_filter" value={filter.id} />
+                <input type="checkbox" id={filter.id} name="selected_filter" value={filter.id} />
                 <label htmlFor={filter.id} id={filter.id}>{filter.id}</label>
               </div>
             ))}
