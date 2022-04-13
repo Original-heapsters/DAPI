@@ -4,8 +4,8 @@ on:
   push:
     branches: [master]
     paths:
-      - 'Dumstigram/Api/*'
-      - 'Dumstigram/Infra/*'
+      - 'Dumstigram/Api/**'
+      - 'Dumstigram/Infra/**'
 
 jobs:
   deployBackend:
