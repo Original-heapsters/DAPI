@@ -4,12 +4,14 @@ certifi==2021.10.8
 charset-normalizer==2.0.12
 click==7.1.2
 colorama==0.4.3
+decorator==5.1.1
 flake8==4.0.1
 Flask==1.1.2
 Flask-Cors==3.0.10
 flask-healthz==0.0.3
 idna==3.3
 iniconfig==1.0.1
+IPy==1.1
 itsdangerous==1.1.0
 Jinja2==2.11.3
 MarkupSafe==1.1.1
@@ -30,5 +32,6 @@ scipy==1.7.2
 six==1.15.0
 toml==0.10.1
 urllib3==1.26.8
+validators==0.18.2
 Wand==0.6.7
 Werkzeug==1.0.1
