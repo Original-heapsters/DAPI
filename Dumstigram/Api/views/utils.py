@@ -1,13 +1,9 @@
 import os
 import io
-import re
-import validators
 import shutil
 import random
 import requests
 import uuid
-from IPy import IP
-from urllib.parse import urlparse
 from flask import current_app, request
 from werkzeug.utils import secure_filename
 
@@ -71,39 +67,8 @@ def use_given_file(file, filter_names):
     return f'File not allowed {file.filename}'
 
 
-def validate_link(link):
-    # Add a protocol if not supplied.
-    link = link.lower()
-    link = link if re.match("^[a-z]+://.*", link) else f"https://{link}"
-
-    # Reject invalid URLs or those containing private IP addresses.
-    validators.url(link, public=False)
-    # if validators.url(link, public=False):
-    #     raise Exception("Invalid or private URL")
-
-    components = urlparse(link)
-
-    # Reject URLs with non-standard protocols.
-    if components.scheme not in ('http', 'https'):
-        raise Exception("Invalid protocol")
-
-    # Reject URLs with non-standard ports.
-    if ':' in components.netloc:
-        raise Exception("Please do not specify a port")
-
-    # Reject URLs containing IP addresses rather than domains.
-    try:
-        IP(str(link))
-        raise Exception("Please specify domains rather than IP addresses")
-    except ValueError:
-        pass
-
-    return link
-
-
 def use_file_url(file_url, filter_name):
-    validated_url = validate_link(file_url)
-    file_request = requests.get(validated_url)
+    file_request = requests.get(file_url)
 
     name = uuid.uuid4().hex
     filename = secure_filename(name + '.png')

@@ -17,6 +17,7 @@ def upload_file():
     asApi = request.args.get('asApi')
     print('asApi is {}'.format(asApi))
     result = utils.process_image()
+    print(result)
     filename, name = result
     if asApi and name:
         # send file as attachment as api response
