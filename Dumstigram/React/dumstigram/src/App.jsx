@@ -4,7 +4,7 @@ import { useCookies } from 'react-cookie';
 import './styles/App.css';
 import Post from './post/Post';
 import Header from './header/Header';
-import CreatePostOverlay from './post/CreatePostOverlay';
+import CreatePostModal from './post/CreatePostModal';
 import * as api from './api';
 
 function App() {
@@ -62,13 +62,17 @@ function App() {
 
   return (
     <div className="app">
-      <CreatePostOverlay
-        creatingPost={isCreatingPost}
-        overlayClick={handleOverlayClick}
-        avatarUrl={avatarUrl}
-        username={username}
-        triggerRefresh={getRecents}
-      />
+      { !isCreatingPost
+        ? (
+          <CreatePostModal
+            creatingPost={isCreatingPost}
+            closeModal={handleOverlayClick}
+            avatarUrl={avatarUrl}
+            username={username}
+            triggerRefresh={getRecents}
+          />
+        )
+        : <div />}
       <Header
         overlayClick={handleOverlayClick}
         avatarUrl={cookies.avatarUrl}
