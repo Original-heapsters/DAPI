@@ -7,7 +7,8 @@ const getFilters = async () => {
     headers: {},
   });
   const filters = data.map((filter) => ({
-    id: filter,
+    id: filter.name,
+    ...filter,
   }));
   return filters;
 };

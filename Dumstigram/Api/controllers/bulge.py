@@ -14,7 +14,9 @@ else:
 class bulge(basic_filter):
     def __init__(self, debug=False):
         super().__init__(debug)
+        self.friendly_name = 'Implode or Explode'
         self.description = """im/explodes the center of image"""
+        self.example_url = 'https://i.stack.imgur.com/T32PN.jpg'
         self.randomization = ['bulge amount']
         self.performance_impact = 2
 

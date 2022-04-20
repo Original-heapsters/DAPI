@@ -11,7 +11,9 @@ else:
 class noise(basic_filter):
     def __init__(self, debug=False):
         super().__init__(debug)
+        self.friendly_name = 'Noise'
         self.description = """Adds random forms of image noise"""
+        self.example_url = 'https://people.sc.fsu.edu/~jburkardt/c_src/image_denoise/balloons_noisy.png'
         self.randomization = ['noise method', 's vs p amount']
         self.performance_impact = 2
 

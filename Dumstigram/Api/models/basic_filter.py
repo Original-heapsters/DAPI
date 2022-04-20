@@ -4,8 +4,10 @@ import cv2
 
 class basic_filter(object):
     def __init__(self, debug=False):
+        self.friendly_name = 'Basic filter'
         self.description = """Most basic filter to apply to an image
                               this just returns the input image"""
+        self.example_url = 'https://answers.opencv.org/upfiles/14972594339956657.jpg'
         self.randomization = []
         self.performance = 1
         self.requires_detection = False
@@ -16,6 +18,8 @@ class basic_filter(object):
         return {
                 'name': self.__class__.__name__,
                 'description': self.description,
+                'example_url': self.example_url,
+                'friendly_name': self.friendly_name,
                 'randomized_aspects': self.randomization,
                 'performance_impact': self.performance,
                 'requires_face': self.requires_detection,

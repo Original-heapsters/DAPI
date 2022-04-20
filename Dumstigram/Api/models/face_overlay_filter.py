@@ -28,9 +28,9 @@ class face_overlay_filter(basic_filter):
                 'randomized_aspects': self.randomization,
                 'performance_impact': self.performance,
                 'requires_face': self.requires_detection,
-                'eye_cascade': self.eye_cascade,
-                'smile_cascade': self.smile_cascade,
-                'face_cascade': self.face_cascade,
+                # 'eye_cascade': self.eye_cascade,
+                # 'smile_cascade': self.smile_cascade,
+                # 'face_cascade': self.face_cascade,
                 'detection_mode': self.detection_mode,
                 'debug_mode': self.debug,
                 }

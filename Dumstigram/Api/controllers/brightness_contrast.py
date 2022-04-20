@@ -11,6 +11,7 @@ else:
 class brightness_contrast(basic_filter):
     def __init__(self, debug=False):
         super().__init__(debug)
+        self.friendly_name = 'Brightness & Contrast'
         self.description = """Adjusts brightness and contrast of image"""
         self.randomization = ['contrast amount', 'brightness amount']
 

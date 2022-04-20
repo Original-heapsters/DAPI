@@ -17,7 +17,9 @@ class mustache(face_overlay_filter):
                  mode,
                  debug=False):
         super().__init__(eye_cascade, smile_cascade, face_cascade, mode, debug)
+        self.friendly_name = 'Mustache'
         self.description = """Add random mustache on detected smiles"""
+        self.example_url = 'https://funny-photo.s3.amazonaws.com/templates/1189/preview220.jpg'
         self.randomization = ['mustache chosen']
         curr_dir = os.path.dirname(os.path.abspath(__file__))
         self.additives = os.path.join(curr_dir, 'mustaches')
