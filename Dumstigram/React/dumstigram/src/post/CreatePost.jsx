@@ -4,10 +4,9 @@ import React, { useState, useEffect } from 'react';
 import * as api from '../api';
 
 function CreatePost({
-  overlayClick,
   username,
   avatarUrl,
-  triggerRefresh,
+  setPostData,
 }) {
   const [caption, setCaption] = useState('Toasty');
   const [ttl, setTtl] = useState('43200');
@@ -15,7 +14,6 @@ function CreatePost({
   const [selectedFile, setSelectedFile] = useState();
   const [filters, setFilters] = useState();
   const [isLoadingFilters, setIsLoadingFilters] = useState(true);
-  const [isPosting, setIsPosting] = useState(false);
 
   useEffect(() => {
     setIsLoadingFilters(true);
@@ -37,10 +35,6 @@ function CreatePost({
     const tmppath = URL.createObjectURL(event.target.files[0]);
     setSelectedFileUrl(tmppath);
     setSelectedFile(event.target.files[0]);
-  };
-
-  const handleSubmission = () => {
-    setIsPosting(true);
     const uploadUrl = `${process.env.REACT_APP_BACKEND_SERVER}/posts`;
     const formData = new FormData();
     if (document.querySelector('input[type="checkbox"]:checked')) {
@@ -54,33 +48,36 @@ function CreatePost({
     formData.append('caption', caption);
     formData.append('ttl', ttl);
     formData.append('avatar', avatarUrl);
-
-    async function createPost(url, postBody) {
-      await api.createPost(url, postBody);
-    }
-    createPost(uploadUrl, formData)
-      .then(() => {
-        setIsPosting(false);
-        triggerRefresh();
-        overlayClick();
-      })
-      .catch(() => {
-        setIsPosting(false);
-        overlayClick();
-      });
+    const postData = {
+      url: uploadUrl,
+      postBody: formData,
+    };
+    setPostData(postData);
   };
+
+  // const handleSubmission = () => {
+  //   const uploadUrl = `${process.env.REACT_APP_BACKEND_SERVER}/posts`;
+  //   const formData = new FormData();
+  //   if (document.querySelector('input[type="checkbox"]:checked')) {
+  //     const isoFilters = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'));
+  // const filterList = isoFilters.reduce((str, filter) => `${filter.value},${str}`, '.slice(0, -1);
+  //     formData.append('filters', filterList);
+  //   }
+  //
+  //   formData.append('file', selectedFile);
+  //   formData.append('username', username);
+  //   formData.append('caption', caption);
+  //   formData.append('ttl', ttl);
+  //   formData.append('avatar', avatarUrl);
+  //   const postData = {
+  //     url: uploadUrl,
+  //     postBody: formData,
+  //   };
+  //   setPostData(postData);
+  // };
 
   return (
     <div className="createPost">
-      <div className="createPost__header">
-        <h2>Create new Fry</h2>
-        <input
-          className="createPost__header__closeButton"
-          type="button"
-          value="X"
-          onClick={overlayClick}
-        />
-      </div>
       <div className="createPost__body">
         <div className="createPost__preview">
           <img
@@ -120,12 +117,6 @@ function CreatePost({
           </label>
           <br />
           <input type="file" name="file" onChange={changeHandler} />
-          <div>
-            { isPosting
-              ? <Rings color="#00BFFF" height={50} width={50} />
-              : <button type="button" onClick={handleSubmission}>Submit</button>}
-
-          </div>
         </div>
       </div>
     </div>
