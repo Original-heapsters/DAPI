@@ -13,6 +13,7 @@ class brightness_contrast(basic_filter):
         super().__init__(debug)
         self.friendly_name = 'Brightness & Contrast'
         self.description = """Adjusts brightness and contrast of image"""
+        self.example_url = 'https://is3-ssl.mzstatic.com/image/thumb/Purple116/v4/97/6c/f5/976cf56b-59a9-f721-00a8-abbcd058e5ca/source/512x512bb.jpg'
         self.randomization = ['contrast amount', 'brightness amount']
 
     def filter_image(self, input):

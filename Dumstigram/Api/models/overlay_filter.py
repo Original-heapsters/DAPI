@@ -14,6 +14,8 @@ class overlay_filter(basic_filter):
         return {
                 'name': self.__class__.__name__,
                 'description': self.description,
+                'friendly_name': self.friendly_name,
+                'example_url': self.example_url,
                 'randomized_aspects': self.randomization,
                 'performance_impact': self.performance,
                 'requires_face': self.requires_detection,
