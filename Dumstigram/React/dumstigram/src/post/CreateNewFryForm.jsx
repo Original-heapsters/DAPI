@@ -6,6 +6,8 @@ import Modal from 'react-bootstrap/Modal';
 import Stack from 'react-bootstrap/Stack';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Accordion from 'react-bootstrap/Accordion';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import * as api from '../api';
@@ -96,15 +98,24 @@ function CreateNewFryForm({
                     {filters.map((filter) => (
                       <div key={filter.id} className="createPost__form__radio">
                         <Form.Check type="checkbox" id={filter.id} name="selected_filter" value={filter.id} label={filter.id} />
-                        <Card style={{ width: '18rem' }}>
-                          <Card.Img variant="top" src={filter.example_url} />
-                          <Card.Body>
-                            <Card.Title>{filter.friendly_name}</Card.Title>
-                            <Card.Text>
-                              {filter.description}
-                            </Card.Text>
-                          </Card.Body>
-                        </Card>
+                        <OverlayTrigger
+                          trigger="click"
+                          placement="top"
+                          overlay={
+                          (
+                            <Card style={{ width: '18rem', 'z-index': '1000000' }}>
+                              <Card.Img variant="top" src={filter.example_url} />
+                              <Card.Body>
+                                <Card.Title>{filter.friendly_name}</Card.Title>
+                                <Card.Text>
+                                  {filter.description}
+                                </Card.Text>
+                              </Card.Body>
+                            </Card>
+                          )
+                       }>
+                          <Button>Show Details</Button>
+                        </OverlayTrigger>
                       </div>
                     ))}
                   </Accordion.Body>
