@@ -29,4 +29,4 @@ def get_filter_info(filter_name):
 
 @filters.route('', methods=['GET'])
 def get_filter_names():
-    return jsonify(list(filter_classes.keys()))
+    return jsonify([filter_classes[filter].get_info() for filter in filter_classes])

@@ -12,7 +12,9 @@ else:
 class emoji_overlay(overlay_filter):
     def __init__(self, debug=False):
         super().__init__(debug)
+        self.friendly_name = 'Emoji Overlay'
         self.description = """Places a random emoji on the source"""
+        self.example_url = 'https://pics.me.me/thumb_deep-fried-meme-starter-pack-100-%D0%B2-%D0%B2%D0%B5%D1%81%D0%B0use-these-emojies-lens-66226636.png'
         self.randomization = ['Location']
         curr_dir = os.path.dirname(os.path.abspath(__file__))
         self.additives = os.path.join(curr_dir, 'emojis')

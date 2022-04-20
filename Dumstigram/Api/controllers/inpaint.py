@@ -18,7 +18,9 @@ class inpaint(face_filter):
                  mode,
                  debug=False):
         super().__init__(eye_cascade, smile_cascade, face_cascade, mode, debug)
+        self.friendly_name = 'Magic Erase {}'.format(mode)
         self.description = """Uses inpaint to remove detected eyes"""
+        self.example_url = 'https://answers.opencv.org/upfiles/14972594339956657.jpg'
         self.randomization = ['inpaint radius']
 
     def filter_image(self, input, coords=None):

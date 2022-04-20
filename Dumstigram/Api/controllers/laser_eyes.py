@@ -17,7 +17,9 @@ class laser_eyes(face_overlay_filter):
                  mode,
                  debug=False):
         super().__init__(eye_cascade, smile_cascade, face_cascade, mode, debug)
+        self.friendly_name = 'Laser Eyes'
         self.description = """Add random set of lasers on detected eyes"""
+        self.example_url = 'https://external-preview.redd.it/E4tUO4bWPB9MlLHuL2N6ryv7ZT5vVZ1jKTJRw3hDZdA.jpg?auto=webp&s=b043e9e208ca1dd7d514805fe6b852bf88308199'
         self.randomization = ['laser chosen']
         curr_dir = os.path.dirname(os.path.abspath(__file__))
         self.additives = os.path.join(curr_dir, 'lasers')

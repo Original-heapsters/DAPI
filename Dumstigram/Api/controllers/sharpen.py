@@ -12,8 +12,10 @@ else:
 class sharpen(basic_filter):
     def __init__(self, debug=False):
         super().__init__(debug)
+        self.friendly_name = 'Sharpen'
         self.description = """Modifies the resolution and contrast around
                               edges for the appearance of a 'sharper' image"""
+        self.example_url = 'https://pe-images.s3.amazonaws.com/photo-editing/cc/sharpen-unsharp-mask/unsharp-mask-radius-comparison.jpg'
         self.randomization = ['kernel']
 
     def filter_image(self, input):

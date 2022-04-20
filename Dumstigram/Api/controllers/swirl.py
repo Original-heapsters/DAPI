@@ -12,7 +12,9 @@ else:
 class swirl(basic_filter):
     def __init__(self, debug=False):
         super().__init__(debug)
+        self.friendly_name = 'Swirl'
         self.description = """Gets a rand center + swirl a rand amount"""
+        self.example_url = 'https://photokit.com/images/tools/wrap_after.jpg'
         self.randomization = ['swirl center', 'swirl radius']
 
     def filter_image(self, input):
