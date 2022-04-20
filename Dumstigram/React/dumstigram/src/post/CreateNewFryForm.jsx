@@ -97,7 +97,7 @@ function CreateNewFryForm({
                   <Accordion.Body>
                     {filters.map((filter) => (
                       <div key={filter.id} className="createPost__form__radio">
-                        <Form.Check type="checkbox" id={filter.id} name="selected_filter" value={filter.id} label={filter.id} />
+                        <Form.Check type="checkbox" id={filter.id} name="selected_filter" value={filter.id} label={filter.friendly_name} />
                         <OverlayTrigger
                           trigger="click"
                           placement="top"
