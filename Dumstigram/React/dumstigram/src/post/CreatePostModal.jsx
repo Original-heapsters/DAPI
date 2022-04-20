@@ -1,21 +1,36 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Modal from 'react-bootstrap/Modal';
-import { Rings } from 'react-loader-spinner';
 import Button from 'react-bootstrap/Button';
-import CreatePost from './CreatePost';
+import { Rings } from 'react-loader-spinner';
+// import CreatePost from './CreatePost';
+import CreateNewFryForm from './CreateNewFryForm';
 import * as api from '../api';
 
 function CreateModalForm({
   creatingPost, closeModal, username, avatarUrl, triggerRefresh,
 }) {
   const [isPosting, setIsPosting] = useState(false);
-  const [postData, setPostData] = useState();
+  const [selectedFile, setSelectedFile] = useState();
+  const [caption, setCaption] = useState('Toasty');
+  const [expiration, setExpiration] = useState('43200');
 
   const handleSubmission = () => {
-    console.log(JSON.stringify(postData));
     setIsPosting(true);
-    const { url: uploadUrl, postBody: formData } = postData;
+    const uploadUrl = `${process.env.REACT_APP_BACKEND_SERVER}/posts`;
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    formData.append('username', username);
+    formData.append('caption', caption);
+    formData.append('ttl', expiration);
+    formData.append('avatar', avatarUrl);
+
+    if (document.querySelector('input[type="checkbox"]:checked')) {
+      const isoFilters = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'));
+      const filterList = isoFilters.reduce((str, filter) => `${filter.value},${str}`, '').slice(0, -1);
+      formData.append('filters', filterList);
+    }
+
     async function createPost(url, postBody) {
       await api.createPost(url, postBody);
     }
@@ -32,19 +47,15 @@ function CreateModalForm({
   };
 
   return (
-    <Modal show={!creatingPost} onHide={closeModal} fullscreen>
+    <Modal show={!creatingPost} onHide={closeModal} dialogClassName="modal-90w">
       <Modal.Header closeButton>
         <Modal.Title>Create New Fry</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
-        <CreatePost
-          overlayClick={closeModal}
-          username={username}
-          avatarUrl={avatarUrl}
-          triggerRefresh={triggerRefresh}
-          setPostData={setPostData}
-        />
-      </Modal.Body>
+      <CreateNewFryForm
+        setSelectedFile={setSelectedFile}
+        setCaption={setCaption}
+        setExpiration={setExpiration}
+      />
       <Modal.Footer>
         <div>
           { isPosting
