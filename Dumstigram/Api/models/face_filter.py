@@ -24,9 +24,11 @@ class face_filter(basic_filter):
         return {
                 'name': self.__class__.__name__,
                 'description': self.description,
+                'example_url': self.example_url,
                 'randomized_aspects': self.randomization,
                 'performance_impact': self.performance,
                 'requires_face': self.requires_detection,
+                'friendly_name': self.friendly_name,
                 # 'eye_cascade': self.eye_cascade,
                 # 'smile_cascade': self.smile_cascade,
                 # 'face_cascade': self.face_cascade,
