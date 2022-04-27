@@ -13,7 +13,7 @@ function App() {
   const [isCreatingPost, setIsCreatingPost] = useState([false]);
   const [cookies, setCookie] = useCookies(['user']);
   const [username, setUsername] = useState('PaPaBl3SsS');
-  const [avatarUrl, setAvatar] = useState('https://i.kym-cdn.com/photos/images/newsfeed/001/931/171/1d5.jpg');
+  const [avatarUrl, setAvatarUrl] = useState('https://i.kym-cdn.com/photos/images/newsfeed/001/931/171/1d5.jpg');
 
   const getRecents = () => {
     setIsLoading(true);
@@ -27,6 +27,7 @@ function App() {
           key: resp.id,
           post: resp.post,
         })).sort((l, r) => {
+          console.log(l);
           const lCreated = parseInt(l.post.created, 10);
           const rCreated = parseInt(r.post.created, 10);
           return rCreated - lCreated;
@@ -40,6 +41,8 @@ function App() {
 
   useEffect(() => {
     getRecents();
+    setUsername(cookies.username)
+    setUsername(cookies.avatarUrl)
   }, []);
 
   const updateUsername = (newUsername) => {
@@ -51,10 +54,14 @@ function App() {
   };
 
   const handleLogin = (newLoginUsername, newLoginAvatarUrl) => {
-    updateUsername(newLoginUsername);
-    updateAvatarUrl(newLoginAvatarUrl);
+    updateUsername(username);
+    updateAvatarUrl(avatarUrl);
+    console.log(JSON.stringify(cookies));
+    console.log(username);
+    console.log(avatarUrl);
     setUsername(cookies.username);
-    setAvatar(cookies.avatarUrl);
+    setAvatarUrl(cookies.avatarUrl);
+    window.location.reload(0);
   };
   const handleOverlayClick = () => {
     setIsCreatingPost(!isCreatingPost);
@@ -62,21 +69,20 @@ function App() {
 
   return (
     <div className="app">
-      { !isCreatingPost
-        ? (
-          <CreatePostModal
-            creatingPost={isCreatingPost}
-            closeModal={handleOverlayClick}
-            avatarUrl={avatarUrl}
-            username={username}
-            triggerRefresh={getRecents}
-          />
-        )
-        : <div />}
+      <CreatePostModal
+        key='createPostModal'
+        creatingPost={isCreatingPost}
+        closeModal={handleOverlayClick}
+        avatarUrl={avatarUrl}
+        username={username}
+        triggerRefresh={getRecents}
+      />
       <Header
         overlayClick={handleOverlayClick}
         avatarUrl={cookies.avatarUrl}
         username={cookies.username}
+        setUsername={setUsername}
+        setAvatarUrl={setAvatarUrl}
         triggerLogin={handleLogin}
       />
       <div className="app__posts">
@@ -87,6 +93,7 @@ function App() {
               {
               posts.map(({ key, post }) => (
                 <Post
+                  key={key}
                   postId={key}
                   username={post.username}
                   avatarUrl={post.avatar_url}

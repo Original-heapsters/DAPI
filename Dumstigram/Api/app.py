@@ -87,7 +87,8 @@ with app.app_context():
                        helloWorld,
                        home,
                        recent,
-                       posts
+                       posts,
+                       users
                        )
     app.config['HEALTHZ'] = {
         "live": healthCheck.liveness,
@@ -100,6 +101,7 @@ with app.app_context():
     app.register_blueprint(home.home, url_prefix='/home')
     app.register_blueprint(recent.recent, url_prefix='/recent')
     app.register_blueprint(posts.posts, url_prefix='/posts')
+    app.register_blueprint(users.users, url_prefix='/users')
 
 if __name__ == '__main__':
     app_port = os.environ.get('PORT') or app.config['PORT']

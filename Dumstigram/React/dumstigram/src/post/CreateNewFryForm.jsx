@@ -79,10 +79,11 @@ function CreateNewFryForm({
               aria-label="Default select example"
               style={{ width: '20vw' }}
               onChange={handleExpirationChange}
+              defaultValue="43200"
             >
               <option id="timeXShort" value="30">30 seconds</option>
               <option id="timeShort" value="3600">1 hour</option>
-              <option id="timeLong" value="43200" selected>12 hours</option>
+              <option id="timeLong" value="43200">12 hours</option>
               <option id="timeXLong" value="86400">1 day</option>
             </Form.Select>
           </FloatingLabel>
@@ -96,14 +97,18 @@ function CreateNewFryForm({
                   <Accordion.Header>Choose your filters</Accordion.Header>
                   <Accordion.Body>
                     {filters.map((filter) => (
-                      <div key={filter.id} className="createPost__form__radio">
+                      <div key={filter.friendly_name} className="createPost__form__radio">
                         <Form.Check type="checkbox" id={filter.id} name="selected_filter" value={filter.id} label={filter.friendly_name} />
                         <OverlayTrigger
+                        key={filter.id}
                           trigger="click"
                           placement="top"
                           overlay={
                           (
-                            <Card style={{ width: '18rem', 'z-index': '1000000' }}>
+                            <Card
+                              key={filter.id}
+                              style={{ width: '18rem', 'z-index': '1000000' }}
+                            >
                               <Card.Img variant="top" src={filter.example_url} />
                               <Card.Body>
                                 <Card.Title>{filter.friendly_name}</Card.Title>

@@ -1,13 +1,27 @@
 import '../styles/Header.css';
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
+import LoginModal from './LoginModal';
 
 function Header({
-  overlayClick, avatarUrl, username, triggerLogin,
+  triggerLogin, overlayClick, avatarUrl, username, setUsername, setAvatarUrl,
 }) {
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const handleLogin = () => {
-    triggerLogin('testing', 'https://i.pinimg.com/236x/b7/91/52/b79152a9f75782757086d5d13489f6d1--ugly-guys-guy-pictures.jpg');
+    setIsLoggingIn(true);
   };
+
+  const handleLoginAbort = () => {
+    setIsLoggingIn(false);
+  };
+
+  const loginSubmit = () => {
+    console.log(username)
+    console.log(avatarUrl)
+    triggerLogin(username, avatarUrl);
+    setIsLoggingIn(false);
+  }
+
   return (
     <div className="header">
       <img
@@ -22,6 +36,15 @@ function Header({
           alt="usernameBoi"
           src={avatarUrl}
           onClick={handleLogin}
+        />
+        <LoginModal
+          loggingIn={isLoggingIn}
+          closeModal={handleLoginAbort}
+          avatarUrl={avatarUrl}
+          username={username}
+          login={loginSubmit}
+          setUsername={setUsername}
+          setAvatarUrl={setAvatarUrl}
         />
         <h3 className="header__admin__username">{username}</h3>
       </div>
