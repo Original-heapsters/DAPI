@@ -1,6 +1,7 @@
 *.production_settings
 **/static/uploads/*
 **/static/recent/*
+**/static/avatars/*
 **/uploads/*
 **/jmeter/*
 !**/jmeter/*.jmx

@@ -2,11 +2,13 @@ import '../styles/Header.css';
 import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import LoginModal from './LoginModal';
+import * as api from '../api';
 
 function Header({
-  triggerLogin, overlayClick, avatarUrl, username, setUsername, setAvatarUrl,
+  triggerLogin, overlayClick, avatarUrl, username, setUsername,
 }) {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [selectedFile, setSelectedFile] = useState();
   const handleLogin = () => {
     setIsLoggingIn(true);
   };
@@ -16,11 +18,22 @@ function Header({
   };
 
   const loginSubmit = () => {
-    console.log(username)
-    console.log(avatarUrl)
-    triggerLogin(username, avatarUrl);
-    setIsLoggingIn(false);
-  }
+    async function fakeLogin(postInfo) {
+      const url = await api.fakeLogin(postInfo);
+      return url;
+    }
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    formData.append('username', username);
+
+    fakeLogin(formData)
+      .then((avatarSuffix) => {
+        const fullAvatar = `${process.env.REACT_APP_BACKEND_SERVER}${avatarSuffix.substr(1)}`;
+        triggerLogin(username, fullAvatar);
+        setIsLoggingIn(false);
+      });
+  };
 
   return (
     <div className="header">
@@ -43,8 +56,9 @@ function Header({
           avatarUrl={avatarUrl}
           username={username}
           login={loginSubmit}
+          selectedFile={selectedFile}
+          setSelectedFile={setSelectedFile}
           setUsername={setUsername}
-          setAvatarUrl={setAvatarUrl}
         />
         <h3 className="header__admin__username">{username}</h3>
       </div>

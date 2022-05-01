@@ -13,6 +13,7 @@ function App() {
   const [isCreatingPost, setIsCreatingPost] = useState([false]);
   const [cookies, setCookie] = useCookies(['user']);
   const [username, setUsername] = useState('PaPaBl3SsS');
+  // eslint-disable-next-line
   const [avatarUrl, setAvatarUrl] = useState('https://i.kym-cdn.com/photos/images/newsfeed/001/931/171/1d5.jpg');
 
   const getRecents = () => {
@@ -27,7 +28,6 @@ function App() {
           key: resp.id,
           post: resp.post,
         })).sort((l, r) => {
-          console.log(l);
           const lCreated = parseInt(l.post.created, 10);
           const rCreated = parseInt(r.post.created, 10);
           return rCreated - lCreated;
@@ -41,28 +41,16 @@ function App() {
 
   useEffect(() => {
     getRecents();
-    setUsername(cookies.username)
-    setUsername(cookies.avatarUrl)
+    setUsername(cookies.username);
+    setUsername(cookies.avatarUrl);
   }, []);
 
-  const updateUsername = (newUsername) => {
-    setCookie('username', newUsername, { path: '/' });
-  };
-
-  const updateAvatarUrl = (newAvatarUrl) => {
-    setCookie('avatarUrl', newAvatarUrl, { path: '/' });
-  };
-
   const handleLogin = (newLoginUsername, newLoginAvatarUrl) => {
-    updateUsername(username);
-    updateAvatarUrl(avatarUrl);
-    console.log(JSON.stringify(cookies));
-    console.log(username);
-    console.log(avatarUrl);
-    setUsername(cookies.username);
-    setAvatarUrl(cookies.avatarUrl);
+    setCookie('username', username, { path: '/' });
+    setCookie('avatarUrl', newLoginAvatarUrl, { path: '/' });
     window.location.reload(0);
   };
+
   const handleOverlayClick = () => {
     setIsCreatingPost(!isCreatingPost);
   };
@@ -70,11 +58,11 @@ function App() {
   return (
     <div className="app">
       <CreatePostModal
-        key='createPostModal'
+        key="createPostModal"
         creatingPost={isCreatingPost}
         closeModal={handleOverlayClick}
-        avatarUrl={avatarUrl}
-        username={username}
+        avatarUrl={cookies.avatarUrl}
+        username={cookies.username}
         triggerRefresh={getRecents}
       />
       <Header

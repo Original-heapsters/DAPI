@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import LoginForm from './LoginForm';
 
 function CreateModalForm({
-  loggingIn, closeModal, username, avatarUrl, login, setUsername, setAvatarUrl
+  loggingIn, closeModal, login, setUsername, setSelectedFile, selectedFile,
 }) {
   return (
     <Modal show={loggingIn} onHide={closeModal} dialogClassName="modal-90w">
@@ -14,8 +14,9 @@ function CreateModalForm({
         <Modal.Title>Login</Modal.Title>
       </Modal.Header>
       <LoginForm
+        setSelectedFile={setSelectedFile}
+        selectedFile={selectedFile}
         setUsername={setUsername}
-        setAvatarUrl={setAvatarUrl}
       />
       <Modal.Footer>
         <Button variant="primary" onClick={login}>Submit</Button>
