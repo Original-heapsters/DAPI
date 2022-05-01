@@ -9,4 +9,5 @@ FACE_CLASSIFIER='haarcascade_frontalface_default.xml'
 DB_HOST = 'sqlite:///persistence/test.db'
 UPLOAD_FOLDER = './static/uploads'
 RECENT_FOLDER = './static/recent'
+USERS_FOLDER = './static/avatars'
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024

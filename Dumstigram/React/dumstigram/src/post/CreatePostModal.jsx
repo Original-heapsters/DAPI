@@ -3,11 +3,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { Rings } from 'react-loader-spinner';
-// import CreatePost from './CreatePost';
 import CreateNewFryForm from './CreateNewFryForm';
 import * as api from '../api';
 
-function CreateModalForm({
+function LoginModal({
   creatingPost, closeModal, username, avatarUrl, triggerRefresh,
 }) {
   const [isPosting, setIsPosting] = useState(false);
@@ -19,6 +18,7 @@ function CreateModalForm({
     setIsPosting(true);
     const uploadUrl = `${process.env.REACT_APP_BACKEND_SERVER}/posts`;
     const formData = new FormData();
+
     formData.append('file', selectedFile);
     formData.append('username', username);
     formData.append('caption', caption);
@@ -68,4 +68,4 @@ function CreateModalForm({
   );
 }
 
-export default CreateModalForm;
+export default LoginModal;

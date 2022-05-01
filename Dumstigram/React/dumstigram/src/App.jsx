@@ -13,7 +13,8 @@ function App() {
   const [isCreatingPost, setIsCreatingPost] = useState([false]);
   const [cookies, setCookie] = useCookies(['user']);
   const [username, setUsername] = useState('PaPaBl3SsS');
-  const [avatarUrl, setAvatar] = useState('https://i.kym-cdn.com/photos/images/newsfeed/001/931/171/1d5.jpg');
+  // eslint-disable-next-line
+  const [avatarUrl, setAvatarUrl] = useState('https://i.kym-cdn.com/photos/images/newsfeed/001/931/171/1d5.jpg');
 
   const getRecents = () => {
     setIsLoading(true);
@@ -40,43 +41,36 @@ function App() {
 
   useEffect(() => {
     getRecents();
+    setUsername(cookies.username);
+    setUsername(cookies.avatarUrl);
   }, []);
 
-  const updateUsername = (newUsername) => {
-    setCookie('username', newUsername, { path: '/' });
-  };
-
-  const updateAvatarUrl = (newAvatarUrl) => {
-    setCookie('avatarUrl', newAvatarUrl, { path: '/' });
-  };
-
   const handleLogin = (newLoginUsername, newLoginAvatarUrl) => {
-    updateUsername(newLoginUsername);
-    updateAvatarUrl(newLoginAvatarUrl);
-    setUsername(cookies.username);
-    setAvatar(cookies.avatarUrl);
+    setCookie('username', username, { path: '/' });
+    setCookie('avatarUrl', newLoginAvatarUrl, { path: '/' });
+    window.location.reload(0);
   };
+
   const handleOverlayClick = () => {
     setIsCreatingPost(!isCreatingPost);
   };
 
   return (
     <div className="app">
-      { !isCreatingPost
-        ? (
-          <CreatePostModal
-            creatingPost={isCreatingPost}
-            closeModal={handleOverlayClick}
-            avatarUrl={avatarUrl}
-            username={username}
-            triggerRefresh={getRecents}
-          />
-        )
-        : <div />}
+      <CreatePostModal
+        key="createPostModal"
+        creatingPost={isCreatingPost}
+        closeModal={handleOverlayClick}
+        avatarUrl={cookies.avatarUrl}
+        username={cookies.username}
+        triggerRefresh={getRecents}
+      />
       <Header
         overlayClick={handleOverlayClick}
         avatarUrl={cookies.avatarUrl}
         username={cookies.username}
+        setUsername={setUsername}
+        setAvatarUrl={setAvatarUrl}
         triggerLogin={handleLogin}
       />
       <div className="app__posts">
@@ -87,6 +81,7 @@ function App() {
               {
               posts.map(({ key, post }) => (
                 <Post
+                  key={key}
                   postId={key}
                   username={post.username}
                   avatarUrl={post.avatar_url}

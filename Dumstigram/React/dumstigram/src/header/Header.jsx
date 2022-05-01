@@ -1,13 +1,40 @@
 import '../styles/Header.css';
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
+import LoginModal from './LoginModal';
+import * as api from '../api';
 
 function Header({
-  overlayClick, avatarUrl, username, triggerLogin,
+  triggerLogin, overlayClick, avatarUrl, username, setUsername,
 }) {
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [selectedFile, setSelectedFile] = useState();
   const handleLogin = () => {
-    triggerLogin('testing', 'https://i.pinimg.com/236x/b7/91/52/b79152a9f75782757086d5d13489f6d1--ugly-guys-guy-pictures.jpg');
+    setIsLoggingIn(true);
   };
+
+  const handleLoginAbort = () => {
+    setIsLoggingIn(false);
+  };
+
+  const loginSubmit = () => {
+    async function fakeLogin(postInfo) {
+      const url = await api.fakeLogin(postInfo);
+      return url;
+    }
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    formData.append('username', username);
+
+    fakeLogin(formData)
+      .then((avatarSuffix) => {
+        const fullAvatar = `${process.env.REACT_APP_BACKEND_SERVER}${avatarSuffix.substr(1)}`;
+        triggerLogin(username, fullAvatar);
+        setIsLoggingIn(false);
+      });
+  };
+
   return (
     <div className="header">
       <img
@@ -22,6 +49,16 @@ function Header({
           alt="usernameBoi"
           src={avatarUrl}
           onClick={handleLogin}
+        />
+        <LoginModal
+          loggingIn={isLoggingIn}
+          closeModal={handleLoginAbort}
+          avatarUrl={avatarUrl}
+          username={username}
+          login={loginSubmit}
+          selectedFile={selectedFile}
+          setSelectedFile={setSelectedFile}
+          setUsername={setUsername}
         />
         <h3 className="header__admin__username">{username}</h3>
       </div>
