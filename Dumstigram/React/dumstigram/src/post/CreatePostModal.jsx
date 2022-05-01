@@ -18,7 +18,7 @@ function LoginModal({
     setIsPosting(true);
     const uploadUrl = `${process.env.REACT_APP_BACKEND_SERVER}/posts`;
     const formData = new FormData();
-    console.log(username);
+
     formData.append('file', selectedFile);
     formData.append('username', username);
     formData.append('caption', caption);

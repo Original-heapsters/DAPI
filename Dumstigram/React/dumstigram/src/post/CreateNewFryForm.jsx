@@ -100,7 +100,7 @@ function CreateNewFryForm({
                       <div key={filter.friendly_name} className="createPost__form__radio">
                         <Form.Check type="checkbox" id={filter.id} name="selected_filter" value={filter.id} label={filter.friendly_name} />
                         <OverlayTrigger
-                        key={filter.id}
+                          key={filter.id}
                           trigger="click"
                           placement="top"
                           overlay={
