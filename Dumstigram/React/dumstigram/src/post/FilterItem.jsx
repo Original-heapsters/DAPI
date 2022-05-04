@@ -30,7 +30,7 @@ function FilterItem({ filter }) {
           </Card>
         )
      }>
-        <Button>Show Detailsyyyy</Button>
+        <Button>Show Details</Button>
       </OverlayTrigger>
     </div>
   );
