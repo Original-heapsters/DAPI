@@ -46,8 +46,9 @@ function App() {
   }, []);
 
   const handleLogin = (newLoginUsername, newLoginAvatarUrl) => {
-    setCookie('username', username, { path: '/' });
-    setCookie('avatarUrl', newLoginAvatarUrl, { path: '/' });
+    const expiration = 60 * 60 * 24 * 365;
+    setCookie('username', username, { path: '/', maxAge: expiration });
+    setCookie('avatarUrl', newLoginAvatarUrl, { path: '/', maxAge: expiration });
     window.location.reload(0);
   };
 
