@@ -28,13 +28,13 @@ BOTTOM_TEXT = ['Bottom Text',
 class add_text(basic_filter):
     def __init__(self, is_top_text=True, debug=False):
         super().__init__(debug)
+        self.name = self.name + '_top' if is_top_text else self.name + '_bottom'
         self.friendly_name = 'Top Text' if is_top_text else 'Bottom Text'
         self.description = """Adds top text"""
         self.example_url = 'https://dh2020.adho.org/wp-content/uploads/2020/07/schmidt_590_figure1.jpg'
         self.is_top_text = is_top_text
 
     def filter_image(self, input):
-        print(input.shape)
         x = int(input.shape[0] / 2)
         y = int(input.shape[1] / 8)
         text_chosen = random.choice(TOP_TEXT)

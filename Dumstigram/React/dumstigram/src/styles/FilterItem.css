@@ -1,1 +1,14 @@
+.filter__item__image{
+  max-width: 250px;
+  min-height: 250px;
+  object-fit: contain;
+}
 
+.filter__item{
+  border-top: 1px solid lightgray;
+  margin-bottom: 5px;
+}
+
+.filter__item__title{
+  margin-top: 25%;
+}
