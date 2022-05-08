@@ -16,7 +16,7 @@ def fake_login():
     avatar = request.files.get('file', None)
     hash_object = hashlib.sha256(str.encode(username))
     user_hash = hash_object.hexdigest()
-    username_key = '{}:username:'.format(user_hash)
+    username_key = '{}:username'.format(user_hash)
     avatar_key = '{}:avatar'.format(user_hash)
     if not redis.get(username_key):
         redis.setex(username_key, current_app.config['REDIS_TTL'], username)
