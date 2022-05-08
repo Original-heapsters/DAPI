@@ -82,6 +82,7 @@ def use_file_url(file_url, filter_name):
 def check_items_in_list(input_dict, items):
     for item in items:
         if item not in input_dict:
+            logger.error('{} was not found in {}'.format(item, input_dict))
             return False
     return True
 
@@ -112,15 +113,15 @@ def process_image(filter_name=None):
     clear_dir(uploads)
 
     if 'file_url' in request.args:
-        print('file_url is {}'.format(request.args))
+        logger.debug('file_url is {}'.format(request.args))
         file_url = request.args.get('file_url')
         return use_file_url(file_url, filter_name)
     elif 'file' in request.files:
-        print('file is {}'.format(request.files))
+        logger.debug('file is {}'.format(request.files))
         file = request.files['file']
         return use_given_file(file, filter_name)
     else:
-        print('ERROR')
+        logger.error('ERROR')
         return 'No file was uploaded or no url was provided'
 
 

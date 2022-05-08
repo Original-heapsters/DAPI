@@ -22,7 +22,7 @@ class face_filter(basic_filter):
 
     def get_info(self):
         return {
-                'name': self.__class__.__name__,
+                'name': self.name,
                 'description': self.description,
                 'example_url': self.example_url,
                 'randomized_aspects': self.randomization,

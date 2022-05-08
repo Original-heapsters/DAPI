@@ -16,7 +16,6 @@ with current_app.app_context():
 @posts.route('/new/<filter_name>', methods=['POST'])
 @posts.route('/create/<filter_name>', methods=['POST'])
 def create_post(filter_name=None):
-    print(filter_name)
     post_info = request.form
     file_input = request.files.get('file', None)
 
@@ -67,7 +66,6 @@ def create_post(filter_name=None):
 
 @posts.route('/refry/<post_key>', methods=['POST'])
 def refry_post(post_key):
-    print(post_key)
     post_info = request.form
 
     if not post_info:
@@ -75,7 +73,6 @@ def refry_post(post_key):
 
     ttl = post_info.get('ttl', default_ttl)
     refryTarget = json.loads(redis.get(post_key))
-    print(refryTarget.keys())
 
     base64_message = refryTarget['bytes']
     base64_bytes = base64_message.encode('ascii')

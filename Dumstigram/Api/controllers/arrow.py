@@ -17,6 +17,7 @@ class arrow(face_filter):
                  mode,
                  debug=False):
         super().__init__(eye_cascade, smile_cascade, face_cascade, mode, debug)
+        self.name = self.name + '_{}'.format(mode)
         self.friendly_name = 'Arrows {}'.format(mode)
         self.description = """Places red arrows pointing to eyes"""
         self.example_url = 'https://i.ytimg.com/vi/Jxwk_c9zWFU/maxresdefault.jpg'

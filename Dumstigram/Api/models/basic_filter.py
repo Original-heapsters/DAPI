@@ -4,6 +4,7 @@ import cv2
 
 class basic_filter(object):
     def __init__(self, debug=False):
+        self.name = self.__class__.__name__
         self.friendly_name = 'Basic filter'
         self.description = """Most basic filter to apply to an image
                               this just returns the input image"""
@@ -16,7 +17,7 @@ class basic_filter(object):
 
     def get_info(self):
         return {
-                'name': self.__class__.__name__,
+                'name': self.name,
                 'description': self.description,
                 'example_url': self.example_url,
                 'friendly_name': self.friendly_name,

@@ -17,6 +17,7 @@ class circle(face_filter):
                  mode,
                  debug=False):
         super().__init__(eye_cascade, smile_cascade, face_cascade, mode, debug)
+        self.name = self.name + '_{}'.format(mode)
         self.friendly_name = 'Circles {}'.format(mode)
         self.description = """Places red cirle around eyes"""
         self.example_url = 'https://miro.medium.com/max/1360/0*zohB6vXlbW4zxLIH.png'

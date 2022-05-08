@@ -1,37 +1,26 @@
 import '../styles/FilterItem.css';
-import React from 'react';
+import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Form from 'react-bootstrap/Form';
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Stack from 'react-bootstrap/Stack';
+import Image from 'react-bootstrap/Image';
 
 function FilterItem({ filter }) {
+  const [checked, setChecked] = useState(false);
   return (
-    <div key={filter.friendly_name} className="createPost__form__radio">
-      <Form.Check type="checkbox" id={filter.id} name="selected_filter" value={filter.id} label={filter.friendly_name} />
-      <OverlayTrigger
-        key={filter.id}
-        trigger="click"
-        placement="top"
-        overlay={
-        (
-          <Card
-            key={filter.id}
-            style={{ width: '18rem', 'z-index': '1000000' }}
-          >
-            <Card.Img variant="top" src={filter.example_url} />
-            <Card.Body>
-              <Card.Title>{filter.friendly_name}</Card.Title>
-              <Card.Text>
-                {filter.description}
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        )
-     }>
-        <Button>Show Details</Button>
-      </OverlayTrigger>
+    <div key={filter.friendly_name} className="filter__item">
+      <Stack direction="horizontal" gap={3} onClick={() => { setChecked(!checked); }}>
+        <Form.Check type="checkbox" id={filter.id} name="selected_filter" value={filter.id} checked={checked} readOnly />
+        <Stack gap={5}>
+          <h1 className="filter__item__title mx-auto">{filter.friendly_name}</h1>
+          <p className="mx-auto">{filter.description}</p>
+        </Stack>
+        <Image
+          className="filter__item__image"
+          src={filter.example_url}
+          fluid
+        />
+      </Stack>
     </div>
   );
 }
