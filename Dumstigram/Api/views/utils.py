@@ -9,7 +9,10 @@ from werkzeug.utils import secure_filename
 
 with current_app.app_context():
     redis = current_app.config['REDIS']
+    tweepy_api = current_app.config['TWEEPY']
     filter_classes = current_app.config['FILTER_CLASSES']
+    max_filters = current_app.config['MAX_FILTERS']
+    query_seeds = current_app.config['CAPTION_STARTERS']
     uploads = current_app.config['UPLOAD_FOLDER']
     logger = current_app.logger
 
@@ -43,7 +46,7 @@ def apply_random_filters(filters, input_img, sequential=False):
             img_src = running_img if running_img else input_img
             running_img = filter.apply_filter(img_src)
     else:
-        for k in range(random.randint(1, num_filters - 1)):
+        for k in range(random.randint(1, min(num_filters - 1, max_filters))):
             img_src = running_img if running_img else input_img
             running_img = random.choice(filters).apply_filter(img_src)
     return running_img
@@ -147,3 +150,15 @@ def process_image_bytes(bytes, fileKey):
         f.write(io.BytesIO(bytes).getbuffer())
 
     return apply_filters(None, input_file, filename, file_prefix)
+
+
+def dumstify_caption():
+    queries = list(query_seeds)
+    query = random.choice(queries)
+    random_tweets = tweepy_api.search_recent_tweets(query=query,
+                                                    tweet_fields=['lang'],
+                                                    max_results=50)
+    english_tweets = list(filter(lambda tweet: (tweet.lang == 'en'), random_tweets.data))
+    print(english_tweets)
+    dumstified_text = random.choice(english_tweets).text
+    return dumstified_text

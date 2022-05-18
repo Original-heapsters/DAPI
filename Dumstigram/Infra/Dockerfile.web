@@ -14,5 +14,6 @@ COPY ./Api .
 
 EXPOSE $PORT
 EXPOSE $REDIS_URL
+EXPOSE $BEARER_TOKEN
 
 CMD [ "python3", "app.py"]

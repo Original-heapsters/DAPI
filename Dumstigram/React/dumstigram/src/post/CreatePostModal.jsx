@@ -11,7 +11,7 @@ function LoginModal({
 }) {
   const [isPosting, setIsPosting] = useState(false);
   const [selectedFile, setSelectedFile] = useState();
-  const [caption, setCaption] = useState('Toasty');
+  const [caption, setCaption] = useState('');
   const [expiration, setExpiration] = useState('43200');
 
   const handleSubmission = () => {

@@ -27,6 +27,9 @@ def create_post(filter_name=None):
     avatar = post_info.get('avatar', None)
     file_url = post_info.get('file_url', None)
     caption = post_info.get('caption', None)
+    if not caption:
+        caption = utils.dumstify_caption()
+    print(caption)
 
     filter_list = post_info.get('filters', filter_name)
     if filter_list:
