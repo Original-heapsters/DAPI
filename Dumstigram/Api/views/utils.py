@@ -153,7 +153,7 @@ def process_image_bytes(bytes, fileKey):
 
 
 def dumstify_caption():
-    queries = list(query_seeds)
+    queries = query_seeds.split(',')
     query = random.choice(queries)
     random_tweets = tweepy_api.search_recent_tweets(query=query,
                                                     tweet_fields=['lang'],
