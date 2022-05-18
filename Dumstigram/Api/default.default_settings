@@ -11,3 +11,6 @@ UPLOAD_FOLDER = './static/uploads'
 RECENT_FOLDER = './static/recent'
 USERS_FOLDER = './static/avatars'
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024
+MAX_FILTERS = 5
+CAPTION_STARTERS='meme,swag,deep fried,tasty,spicy,gone,yikes,fried,angry,to the moon,doge,elon,wsb,degen,degenerate'
+BEARER_TOKEN='not for you'
