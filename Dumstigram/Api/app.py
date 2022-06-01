@@ -27,7 +27,7 @@ def initialize():
     redis_url = os.environ.get('REDIS_URL') or app.config['REDIS_URL']
     redis_instance = redis.Redis.from_url(redis_url)
     app.config['REDIS'] = redis_instance
-    bearer_token = app.config['BEARER_TOKEN']
+    bearer_token = os.environ.get('BEARER_TOKEN') or app.config['BEARER_TOKEN']
 
     client = tweepy.Client(bearer_token)
     client.search_recent_tweets('test')
