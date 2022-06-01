@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Rings } from 'react-loader-spinner';
-import { useCookies } from 'react-cookie';
 import './styles/App.css';
 import Post from './post/Post';
 import Header from './header/Header';
@@ -11,7 +10,6 @@ function App() {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState([false]);
   const [isCreatingPost, setIsCreatingPost] = useState([false]);
-  const [cookies, setCookie] = useCookies(['user']);
   const [username, setUsername] = useState('PaPaBl3SsS');
   // eslint-disable-next-line
   const [avatarUrl, setAvatarUrl] = useState('https://i.kym-cdn.com/photos/images/newsfeed/001/931/171/1d5.jpg');
@@ -45,10 +43,7 @@ function App() {
     // setUsername(cookies.avatarUrl);
   }, []);
 
-  const handleLogin = (newLoginUsername, newLoginAvatarUrl) => {
-    const expiration = 60 * 60 * 24 * 365;
-    setCookie('username', username, { path: '/', maxAge: expiration });
-    setCookie('avatarUrl', newLoginAvatarUrl, { path: '/', maxAge: expiration });
+  const handleLogin = () => {
     if ('caches' in window) {
       caches.keys().then((names) => {
         names.forEach((name) => {
