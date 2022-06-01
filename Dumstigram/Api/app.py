@@ -27,17 +27,7 @@ def initialize():
     redis_url = os.environ.get('REDIS_URL') or app.config['REDIS_URL']
     redis_instance = redis.Redis.from_url(redis_url)
     app.config['REDIS'] = redis_instance
-    consumer_key = app.config['CONSUMER_KEY']
-    consumer_secret = app.config['CONSUMER_SECRET']
-    access_token = app.config['ACCESS_TOKEN']
-    access_token_secret = app.config['ACCESS_TOKEN_SECRET']
-    bearer_token = app.config['BEARER_TOKEN']
-
-    print(consumer_key)
-
-    auth = tweepy.OAuth1UserHandler(
-       consumer_key, consumer_secret, access_token, access_token_secret
-    )
+    bearer_token = os.environ.get('BEARER_TOKEN') or app.config['BEARER_TOKEN']
 
     client = tweepy.Client(bearer_token)
     client.search_recent_tweets('test')

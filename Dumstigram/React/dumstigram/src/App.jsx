@@ -41,8 +41,8 @@ function App() {
 
   useEffect(() => {
     getRecents();
-    setUsername(cookies.username);
-    setUsername(cookies.avatarUrl);
+    // setUsername(cookies.username);
+    // setUsername(cookies.avatarUrl);
   }, []);
 
   const handleLogin = (newLoginUsername, newLoginAvatarUrl) => {
@@ -69,14 +69,14 @@ function App() {
         key="createPostModal"
         creatingPost={isCreatingPost}
         closeModal={handleOverlayClick}
-        avatarUrl={cookies.avatarUrl}
-        username={cookies.username}
+        avatarUrl={avatarUrl}
+        username={username}
         triggerRefresh={getRecents}
       />
       <Header
         overlayClick={handleOverlayClick}
-        avatarUrl={cookies.avatarUrl}
-        username={cookies.username}
+        avatarUrl={avatarUrl}
+        username={username}
         setUsername={setUsername}
         setAvatarUrl={setAvatarUrl}
         triggerLogin={handleLogin}

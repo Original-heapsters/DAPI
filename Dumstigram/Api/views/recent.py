@@ -13,6 +13,7 @@ with current_app.app_context():
 
 def save_avatar(full_url):
     avatar_file_name = full_url[0].rsplit('/')[-1]
+    print(avatar_file_name)
     avatar_hash = avatar_file_name[:-4]
     avatar_key = '{}:avatar'.format(avatar_hash)
     print(avatar_key)
@@ -44,7 +45,8 @@ def get_recent_frys(num_recent):
             f.write(bytess)
             f.close()
             full_avatar_url = full_post.get('avatar_url', None),
-            save_avatar(full_avatar_url)
+            print(full_avatar_url)
+            # save_avatar(full_avatar_url)
             return_obj[str(r_key)] = {
                 'img_url': dest_path,
                 'username': full_post.get('username', None),

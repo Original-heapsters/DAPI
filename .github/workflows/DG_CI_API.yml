@@ -1,6 +1,7 @@
 name: Dumstigram Backend CI
 env:
   PROJECT_NAME: 'Dumstigram'
+  BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
 
 on:
   pull_request:
