@@ -198,15 +198,15 @@ fun BottomNavigationBar(viewState: MutableState<MainActivityState>, viewModel: M
     ) {
         val uri = it ?: return@rememberLauncherForActivityResult
         val inputStream = context.contentResolver.openInputStream(uri)
-        val drawable = Drawable.createFromStream(inputStream, uri.toString())
-        val randomFileName = UUID.randomUUID().toString()
-        when (val savedBitmapResult =
-            viewModel.saveBitmapToCache(context, randomFileName, drawable.toBitmap())) {
-            is Result.Success -> {
-                viewState.value = MainActivityState.ImageSelected(savedBitmapResult.value)
-            }
-            is Result.Failure -> {
-                viewState.value = MainActivityState.Error(savedBitmapResult.reason)
+        Drawable.createFromStream(inputStream, uri.toString())?.run {
+            val randomFileName = UUID.randomUUID().toString()
+            when (val savedBitmapResult = viewModel.saveBitmapToCache(context, randomFileName, this.toBitmap())) {
+                is Result.Success -> {
+                    viewState.value = MainActivityState.ImageSelected(savedBitmapResult.value)
+                }
+                is Result.Failure -> {
+                    viewState.value = MainActivityState.Error(savedBitmapResult.reason)
+                }
             }
         }
     }
