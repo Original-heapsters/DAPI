@@ -37,4 +37,4 @@ tweepy==4.9.0
 urllib3==1.26.8
 validators==0.18.2
 Wand==0.6.7
-Werkzeug==1.0.1
+Werkzeug==2.2.3
